@@ -1,18 +1,54 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 
+export const routeNames = {
+  home: 'Home',
+  hotel: 'Hotel',
+  rooms: 'Rooms',
+  photos: 'Photos',
+  contact: 'Contact',
+}
+
+export const menuRoutes = [
+  { title: 'Home',    route: routeNames.home,   icon: 'mdi-home' },
+  { title: 'O Hotel', route: routeNames.hotel,   icon: 'mdi-domain' },
+  { title: 'Quartos', route: routeNames.rooms,   icon: 'mdi-bed-outline' },
+  { title: 'Galeria', route: routeNames.photos,  icon: 'mdi-image-multiple-outline' },
+  { title: 'Contato', route: routeNames.contact, icon: 'mdi-phone-outline' },
+]
+
 const routes = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
+    component: () => import('@/layouts/Default.vue'),
     children: [
       {
         path: '',
-        name: 'Home',
+        name: routeNames.home,
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
+      {
+        path: 'hotel',
+        name: routeNames.hotel,
+        component: () => import(/* webpackChunkName: "hotel" */ '@/views/Hotel.vue'),
+      },
+      {
+        path: 'quartos',
+        name: routeNames.rooms,
+        component: () => import(/* webpackChunkName: "rooms" */ '@/views/Rooms.vue'),
+      },
+      {
+        path: 'galeria',
+        name: routeNames.photos,
+        component: () => import(/* webpackChunkName: "photos" */ '@/views/Photos.vue'),
+      },
+      {
+        path: 'contato',
+        name: routeNames.contact,
+        component: () => import(/* webpackChunkName: "contact" */ '@/views/Contact.vue'),
       },
     ],
   },
