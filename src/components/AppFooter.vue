@@ -1,5 +1,5 @@
 <template>
-  <img src="../assets/mountain-1-big.svg" />
+  <img src="../assets/mountain-1-big.svg" class="mt-8" />
   <v-footer class="py-10" theme="dark" color="#293F00" style="margin-top: -1px;">
     <v-row>
       <v-col cols="12" md="4" class="px-8 text-center">
