@@ -1,11 +1,9 @@
 <template>
-  <img src="../assets/mountain-1.svg" />
-  <v-footer class="py-15" theme="dark" color="#293F00" style="margin-top: -1px;">
+  <img src="../assets/mountain-1-big.svg" />
+  <v-footer class="py-10" theme="dark" color="#293F00" style="margin-top: -1px;">
     <v-row>
       <v-col cols="12" md="4" class="px-8 text-center">
-        <p class="text-h5 mb-2">
-          Pé da Serra Hotel
-        </p>
+        <img src="../assets/logo-white.svg" style="max-height: 100px;">
         <div>
           <v-btn
             class="mx-4"
@@ -29,7 +27,7 @@
         <!-- <v-divider class="my-2"/> -->
       </v-col>
       <v-col cols="12" md="4" class="px-8 text-center">
-        <p class="text-h6 pb-5">Mapa do site</p>
+        <p class="text-h6 pb-5">MAPA DO SITE</p>
         <router-link
           v-for="i in menuRoutes"
           :key="i.title"
@@ -40,7 +38,7 @@
         </router-link>
       </v-col>
       <v-col cols="12" md="4" class="px-8">
-        <p class="text-center text-h6 pb-5">Atendimento</p>
+        <p class="text-center text-h6 pb-5">ATENDIMENTO</p>
         <v-row>
           <v-col offset="3" cols="9" offset-md="1" md="12" offset-lg="3" lg="9">
             <v-icon icon="mdi-phone-outline" size="small" start />
