@@ -18,11 +18,11 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: '#1867C0',
-          secondary: '#5CBBF6',
+          primary: '#2e8a34',
+          secondary: '#293F00',
         },
       },
     },
   },
-  blueprint: md3,
+  blueprint: md2,
 })
