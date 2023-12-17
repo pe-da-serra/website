@@ -7,7 +7,7 @@
   </v-row>
   <v-row justify="center">
     <v-col md="10" xl="7" class="pa-0">
-      <v-card elevation="0" min-height="700">
+      <v-card elevation="0" min-height="700" color="background">
         <v-tabs
           v-model="currentTab"
           color="primary"

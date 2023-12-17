@@ -13,7 +13,7 @@
           <p class="text-h6 font-weight-medium">Comodidades</p >
           <v-row>
             <v-col>
-              <v-list>
+              <v-list bg-color="background">
                 <RoomFeature icon="mdi-bed-queen-outline" text="Cama de casal" />
                 <RoomFeature icon="mdi-shower-head" text="Banheiro privativo" />
                 <RoomFeature icon="mdi-wifi" text="Rede Wi-Fi" />
@@ -21,10 +21,10 @@
               </v-list>
             </v-col>
             <v-col>
-              <v-list>
+              <v-list bg-color="background">
                 <RoomFeature icon="mdi-car-outline" text="Estacionamento" />
                 <RoomFeature icon="mdi-fridge-industrial-outline" text="Frigobar" />
-                <RoomFeature icon="mdi-fan" text="Ventilador de teto" />
+                <RoomFeature icon="mdi-ceiling-fan" text="Ventilador de teto" />
                 <RoomFeature icon="mdi-phone-classic" text="Telefone" />
               </v-list>
             </v-col>
