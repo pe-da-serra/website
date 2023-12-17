@@ -93,96 +93,24 @@
   </div>
 </div>
 
-<!-- POPUP -->
-<v-dialog v-model="modal" eager fullscreen :class="modal ? 'bg-black' : ''">
-  <v-row
-    v-if="xs || mdAndUp"
-    justify="center"
-    align="center"
-    class="pt-5 mx-0"
-  >
-    <v-col cols="3" class="pa-0 pl-6">
-      <v-btn
-        v-if="xs"
-        icon="mdi-chevron-left"
-        variant="plain"
-        color="white"
-        @click="closeModal()"
-      />
-      <v-btn
-        v-if="mdAndUp"
-        variant="text"
-        color="white"
-        prepend-icon="mdi-close"
-        @click="closeModal()"
-      >
-        Fechar
-      </v-btn>
-    </v-col>
-    <v-col cols="6" class="pa-0 text-center">
-      {{ carouselIndex + 1 }} / {{ images.length }}
-    </v-col>
-    <v-col cols="3" class="pa-0"></v-col>
-  </v-row>
-  <v-row class="h-100 ma-0" align="center">
-    <v-col
-      v-if="sm"
-      sm="2"
-      align-self="start"
-    >
-      <v-btn
-        icon="mdi-chevron-left"
-        variant="plain"
-        color="white"
-        @click="closeModal()"
-      />
-    </v-col>
-    <v-col sm="8" md="12" class="pa-0">
-      <v-carousel
-        hide-delimiters
-        :show-arrows="!smAndDown"
-        v-model="carouselIndex"
-        touch
-        @click="modal = true"
-        class="pa-0 ma-0"
-      >
-        <v-carousel-item
-          v-for="image in images"
-          :key="image"
-          :src="image"
-          height="100vh"
-        />
-        <template #prev="{ props }">
-          <v-btn
-            variant="outlined"
-            color="white"
-            icon="mdi-chevron-left"
-            @click="props.onClick"
-          />
-        </template>
-        <template #next="{ props }">
-          <v-btn
-            variant="outlined"
-            color="white"
-            icon="mdi-chevron-right"
-            @click="props.onClick"
-          />
-        </template>
-      </v-carousel>
-    </v-col>
-  </v-row>
-</v-dialog>
+<PhotoGalleryDialog
+  :images="images"
+  v-model:open="modal"
+  v-model:index="carouselIndex"
+/>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useDisplay } from 'vuetify';
+import PhotoGalleryDialog from '@/components/PhotoGalleryDialog.vue';
 
 defineProps<{
   images: string[],
 }>();
+defineEmits(["update:images"])
 
-const { xs, sm, smAndDown, mdAndUp } = useDisplay()
+const { xs } = useDisplay()
 
 const modal = ref(false);
 const carouselIndex = ref(0);
@@ -190,8 +118,6 @@ const openModalAtIndex = (index: number) => {
   carouselIndex.value = index;
   modal.value = true;
 }
-const closeModal = () => { modal.value = false; }
-
 </script>
 
 <style scoped>
