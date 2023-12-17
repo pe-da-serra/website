@@ -152,6 +152,22 @@
           :src="image"
           height="100vh"
         />
+        <template #prev="{ props }">
+          <v-btn
+            variant="outlined"
+            color="white"
+            icon="mdi-chevron-left"
+            @click="props.onClick"
+          />
+        </template>
+        <template #next="{ props }">
+          <v-btn
+            variant="outlined"
+            color="white"
+            icon="mdi-chevron-right"
+            @click="props.onClick"
+          />
+        </template>
       </v-carousel>
     </v-col>
   </v-row>
