@@ -1,5 +1,5 @@
 <template>
-  <img src="../assets/mountain-1-big.svg" class="mt-8" />
+  <img src="../assets/mountain-1-big.svg" class="pt-10" />
   <v-footer class="py-10" theme="dark" color="#293F00" style="margin-top: -1px;">
     <v-row>
       <v-col cols="12" md="4" class="px-8 text-center">
@@ -39,14 +39,32 @@
       </v-col>
       <v-col cols="12" md="4" class="px-8">
         <p class="text-center text-h6 pb-5">ATENDIMENTO</p>
-        <v-row>
-          <v-col offset="3" cols="9" offset-md="1" md="12" offset-lg="3" lg="9">
-            <v-icon icon="mdi-phone-outline" size="small" start />
-            <span>(24) 3355-1234</span><br>
-            <v-icon icon="mdi-whatsapp" size="small" start />
-            <span>(24) 98765-4321</span><br>
-            <v-icon icon="mdi-email-outline" size="small" start />
-            <span>reserva@pedaserrahotel.com.br</span>
+        <v-row justify="center">
+          <v-col cols="10">
+            <p class="py-1">
+              <v-icon icon="mdi-phone-outline" start />
+              (24) 3355-1234
+            </p>
+            <p class="py-1">
+              <v-icon icon="mdi-whatsapp" start />
+              (24) 98765-4321
+            </p>
+            <p class="py-1">
+              <v-icon icon="mdi-email-outline" start />
+              reserva@pedaserrahotel.com.br
+            </p>
+            <p class="pt-1">
+              <v-icon icon="mdi-map-marker-outline" start />
+              Rua Luís Pistarini, 43
+            </p>
+            <p>
+              <v-icon start />
+              Campos Elíseos, Resende - RJ
+            </p>
+            <p>
+              <v-icon start />
+              27542-090
+            </p>
           </v-col>
         </v-row>
       </v-col>
