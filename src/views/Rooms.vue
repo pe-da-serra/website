@@ -30,12 +30,12 @@ import { routeNames } from '@/router';
 import img1 from '@/assets/example/img-1.jpg';
 
 const rooms = ref([
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
-  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.hotel, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
+  { title: "Quarto Exemplo 1", guests: 2, beds: 1, route: routeNames.room.example, image: img1 },
 ])
 </script>

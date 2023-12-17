@@ -7,6 +7,9 @@ export const routeNames = {
   rooms: 'Rooms',
   photos: 'Photos',
   contact: 'Contact',
+  room: {
+    example: 'ExampleRoom'
+  }
 }
 
 export const menuRoutes = [
@@ -49,6 +52,11 @@ const routes = [
         path: 'contato',
         name: routeNames.contact,
         component: () => import(/* webpackChunkName: "contact" */ '@/views/Contact.vue'),
+      },
+      {
+        path: 'quartos/exemplo-1',
+        name: routeNames.room.example,
+        component: () => import(/* webpackChunkName: "rooms-example1" */ '@/views/rooms/Example.vue'),
       },
     ],
   },
