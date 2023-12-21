@@ -6,7 +6,7 @@
     </v-col>
   </v-row> -->
   <v-row class="pt-3">
-    <v-col cols="12" lg="4" offset-lg="2" class="pr-0">
+    <v-col cols="12" lg="4" offset-lg="2" class="pr-0 py-10">
       <div class="h-100 d-flex flex-column justify-space-evenly px-7">
         <div class="text-center">
           <p class="text-h4">Contato</p>
@@ -82,6 +82,40 @@
       />
     </v-col>
   </v-row>
+  <!-- <v-row justify="center" class="my-10">
+    <v-col md="10" xl="7" class="pa-0">
+      <v-card>
+        <v-card-text>
+          <v-form>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field variant="outlined" label="Nome completo" />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field variant="outlined" label="E-mail" />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field variant="outlined" label="Telefone" />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field variant="outlined" label="Assunto" />
+              </v-col>
+              <v-col>
+                <v-textarea variant="outlined" label="Mensagem" />
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+        <v-card-actions >
+          <v-spacer />
+          <v-btn color="primary" variant="flat" size="large" class="px-8">
+            Enviar
+          </v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row> -->
 </template>
 
 <script setup lang="ts">

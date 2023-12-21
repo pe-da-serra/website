@@ -9,7 +9,8 @@
         </router-link>
       </v-app-bar-title>
       <!-- <v-btn v-if="!mobile" variant="outlined">Reservar</v-btn> -->
-      <v-btn icon="mdi-translate" />
+      <!-- <v-btn icon="mdi-translate" /> -->
+      <v-btn icon="" disabled></v-btn>
     </v-app-bar>
 
     <app-navigation-drawer v-model="drawer" />

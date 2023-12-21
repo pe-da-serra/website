@@ -25,7 +25,6 @@
           Saiba mais
         </v-btn>
         <v-spacer />
-
       </v-card-actions>
     </v-card>
   </div>

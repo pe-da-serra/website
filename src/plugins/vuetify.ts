@@ -11,6 +11,7 @@ import 'vuetify/styles'
 // Composables
 import { createVuetify } from 'vuetify'
 import { md2, md3 } from 'vuetify/blueprints'
+import { pt } from 'vuetify/locale'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -26,4 +27,8 @@ export default createVuetify({
     },
   },
   blueprint: md2,
+  locale: {
+    locale: 'pt',
+    messages: { pt }
+  }
 })
