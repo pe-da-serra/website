@@ -15,6 +15,7 @@
         :label="label"
         :prepend-icon="prependIcon"
         readonly
+        hide-details
       />
     </template>
 
@@ -36,7 +37,7 @@ import { useDate } from 'vuetify/lib/framework.mjs';
 
 const props = defineProps<{
   modelValue: Date,
-  minDate: Date | undefined,
+  minDate?: Date,
   variant: 'filled' | 'outlined' | 'plain' | 'underlined' | 'solo' | 'solo-inverted' | 'solo-filled' | undefined,
   label: string | undefined,
   prependIcon: string | undefined,

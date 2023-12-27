@@ -27,21 +27,7 @@
       <v-card class="mx-16 pa-5" style="margin-top: -3rem;">
         <v-form>
           <v-row>
-            <v-col cols="7" sm="4">
-              <!-- <v-text-field
-                variant="outlined"
-                label="Hóspedes"
-                model-value="2"
-                prepend
-                prepend-icon="mdi-account-multiple-outline"
-              >
-                <template v-slot:prepend-inner>
-                  <v-btn variant="outlined" icon="mdi-minus" size="xs" />
-                </template>
-                <template v-slot:append-inner>
-                  <v-btn variant="outlined" icon="mdi-plus" size="xs" />
-                </template>
-              </v-text-field> -->
+            <v-col cols="10" sm="4">
               <NumberInput
                 v-model="guests"
                 label="Hóspedes"
@@ -51,29 +37,25 @@
               />
             </v-col>
             <v-col cols="12" sm="4">
-              <!-- <v-text-field
-                variant="outlined"
-                label="Checkin"
-                prepend-icon="mdi-calendar-start-outline"
-                hide-details
-              /> -->
               <DateInput
-                v-model="startDate"
+                :model-value="startDate"
+                @update:model-value="updateStartDate"
+                :min-date="today"
+                label="Checkin"
+                variant="outlined"
                 prepend-icon="mdi-calendar-start-outline"
               />
             </v-col>
             <v-col cols="12" sm="4">
-              <!-- <v-text-field
-                variant="outlined"
+              <DateInput
+                :model-value="endDate"
+                @update:model-value="updateEndDate"
+                :min-date="today"
                 label="Checkout"
+                variant="outlined"
                 prepend-icon="mdi-calendar-end-outline"
-                hide-details
-              /> -->
-              <DateInput v-model="endDate" prepend-icon="mdi-calendar-end-outline" />
+              />
             </v-col>
-            <!-- <v-col cols="12">
-              <DateInput v-model="startDate" />
-            </v-col> -->
           </v-row>
         </v-form>
         <v-card-actions class="mt-5">
@@ -92,20 +74,31 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { useDate, useDisplay } from 'vuetify'
+import { useDisplay } from 'vuetify'
 import NumberInput from '@/components/NumberInput.vue'
 import DateInput from '@/components/DateInput.vue';
 
 const { smAndDown } = useDisplay()
-const dateAdapter = useDate();
-
-const guests = ref(2);
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-
-const startDate = ref(today);
-const endDate = ref(dateAdapter.addDays(today, 1));
-
 var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));
 
+const guests = ref(2);
+const startDate = ref(new Date);
+const endDate = ref(new Date);
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+startDate.value.setDate(startDate.value.getDate() + 1);
+endDate.value.setDate(endDate.value.getDate() + 3);
+
+// if the new start date is after the current end date, update also the end date to be the same as the start date
+function updateStartDate(date: Date): void {
+  if (date > endDate.value) endDate.value = date;
+  startDate.value = date;
+}
+
+// if start date is after the new end date, update also the start date to be the same as the end date
+function updateEndDate(date: Date): void {
+  if (date < startDate.value) startDate.value = date;
+  endDate.value = date;
+}
 </script>
