@@ -95,6 +95,17 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Pé da Serra Hotel',
+  meta: [
+    {
+      name: 'description',
+      content: 'Sobre o hotel e sua infraestrutura.',
+    },
+  ],
+});
+
 import img1 from '@/assets/example/img-1.jpg';
 import img2 from '@/assets/example/img-2.jpg';
 import img3 from '@/assets/example/img-3.jpg';

@@ -45,6 +45,17 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Pé da Serra Hotel',
+  meta: [
+    {
+      name: 'description',
+      content: 'Galeria de fotos do hotel, quartos e região.',
+    },
+  ],
+});
+
 import { ref } from 'vue';
 import PhotoGalleryDialog from '@/components/PhotoGalleryDialog.vue';
 import img1 from '@/assets/example/img-1.jpg';

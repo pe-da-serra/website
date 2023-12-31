@@ -119,6 +119,17 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Pé da Serra Hotel',
+  meta: [
+    {
+      name: 'description',
+      content: 'Informações de contato e localização do hotel.',
+    },
+  ],
+});
+
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 const { xs, sm, md, lg, xl } = useDisplay();

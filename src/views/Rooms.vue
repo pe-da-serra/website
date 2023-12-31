@@ -24,6 +24,17 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Pé da Serra Hotel',
+  meta: [
+    {
+      name: 'description',
+      content: 'Lista de quartos do hotel.',
+    },
+  ],
+});
+
 import { ref } from 'vue';
 import RoomCard from '@/components/RoomCard.vue';
 import { routeNames } from '@/router';

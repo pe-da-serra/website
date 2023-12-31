@@ -8,17 +8,23 @@
   >
     <v-carousel-item
       src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
-      position="50% 50%"
+      lazy-src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+      :height="carouselHeight"
+      alt="Homepage banner 1"
       cover
     />
     <v-carousel-item
       src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      position="50% 50%"
+      lazy-src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+      alt="Homepage banner 2"
+      :height="carouselHeight"
       cover
     />
     <v-carousel-item
       src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-      position="50% 50%"
+      lazy-src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+      alt="Homepage banner 3"
+      :height="carouselHeight"
       cover
     />
   </v-carousel>
@@ -77,6 +83,17 @@ import { ref, computed } from 'vue';
 import { useDisplay } from 'vuetify'
 import NumberInput from '@/components/NumberInput.vue'
 import DateInput from '@/components/DateInput.vue';
+
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Pé da Serra Hotel',
+  meta: [
+    {
+      name: 'description',
+      content: 'Página inicial do Pé da Serra Hotel',
+    },
+  ],
+});
 
 const { smAndDown } = useDisplay()
 var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));
