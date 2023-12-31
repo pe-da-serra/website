@@ -21,7 +21,7 @@ jobs:
       run: npm ci
 
     - name: Build
-      run: npm run generate
+      run: npm run build
 
     - name: FTP Deploy Locaweb
       uses: locaweb/ftp-deploy@1.0.0
