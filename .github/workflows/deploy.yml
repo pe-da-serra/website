@@ -23,12 +23,10 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: copy file via ssh password
-      uses: appleboy/scp-action@v0.1.6
+    - name: FTP Deploy Locaweb
+      uses: locaweb/ftp-deploy@1.0.0
       with:
-        host: ${{ vars.FTP_SERVER }}
-        username: ${{ vars.FTP_USERNAME }}
+        host: ${{ vars.FTP_SERVER }} 
+        user: ${{ vars.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        port: 22
-        source: "dist/*"
-        target: public_html/
+        localDir: "dist"
