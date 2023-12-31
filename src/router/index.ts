@@ -1,5 +1,5 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createWebHistory } from 'vue-router'
 
 export const routeNames = {
   home: 'Home',
@@ -20,7 +20,7 @@ export const menuRoutes = [
   { title: 'Contato', route: routeNames.contact, icon: 'mdi-phone-outline' },
 ]
 
-const routes = [
+export const routes = [
   {
     path: '/',
     component: () => import('@/layouts/Default.vue'),
@@ -62,13 +62,15 @@ const routes = [
   },
 ]
 
-const router = createRouter({
+export const routerOptions = {
   routes,
-  history: createWebHistory(process.env.BASE_URL),
-  scrollBehavior(to, from, savedPosition) {
+  // history: createWebHistory(process.env.BASE_URL),
+  scrollBehavior() {
     // always scroll to top
     return { top: 0, smooth: true }
   },
-})
+};
 
-export default router
+// const router = createRouter(routerOptions);
+
+// export default router
