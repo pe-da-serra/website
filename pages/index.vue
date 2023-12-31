@@ -79,21 +79,27 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  menuOrder: 1,
+  title: 'Home',
+  icon: 'mdi-home',
+})
+
 import { ref, computed } from 'vue';
 import { useDisplay } from 'vuetify'
 import NumberInput from '@/components/NumberInput.vue'
 import DateInput from '@/components/DateInput.vue';
 
-import { useHead } from '@vueuse/head'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Página inicial do Pé da Serra Hotel',
-    },
-  ],
-});
+// import { useHead } from '@vueuse/head'
+// useHead({
+//   title: 'Pé da Serra Hotel',
+//   meta: [
+//     {
+//       name: 'description',
+//       content: 'Página inicial do Pé da Serra Hotel',
+//     },
+//   ],
+// });
 
 const { smAndDown } = useDisplay()
 var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));

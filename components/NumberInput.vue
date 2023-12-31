@@ -7,6 +7,7 @@
     @update:model-value="$emit('update:model-value', $event)"
     :model-value="modelValue"
     readonly
+    density="default"
     center-affix
   >
     <template #prepend-inner>
