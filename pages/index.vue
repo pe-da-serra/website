@@ -81,7 +81,7 @@
 <script lang="ts" setup>
 definePageMeta({
   menuOrder: 1,
-  title: 'Home',
+  title: 'Página Inicial',
   icon: 'mdi-home',
 })
 

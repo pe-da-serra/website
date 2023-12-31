@@ -28,14 +28,14 @@
       </v-col>
       <v-col cols="12" md="4" class="px-8 text-center">
         <p class="text-h6 pb-5">MAPA DO SITE</p>
-        <!-- <router-link
+        <router-link
           v-for="i in menuRoutes"
-          :key="i.title"
-          :to="{ name: i.route }"
+          :key="i.name"
+          :to="i"
           style="all: unset; cursor: pointer;"
         >
-          <p class="mb-2">{{ i.title }}</p>
-        </router-link> -->
+          <p class="mb-2">{{ i.meta.title }}</p>
+        </router-link>
       </v-col>
       <v-col cols="12" md="4" class="px-8">
         <p class="text-center text-h6 pb-5">ATENDIMENTO</p>
@@ -73,6 +73,10 @@
 </template>
 
 <script setup lang="ts">
-// import { menuRoutes } from '@/router';
-
+const menuRoutes = ref(
+  useRouter()
+    .getRoutes()
+    .filter((i) => i.meta.menuOrder !== undefined)
+    .sort((a, b) => a.meta.menuOrder - b.meta.menuOrder)
+)
 </script>

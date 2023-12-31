@@ -28,5 +28,11 @@ defineEmits(['update:value']);
 import { ref } from 'vue';
 
 import { useRouter } from 'vue-router';
-const menuRoutes = ref(useRouter().getRoutes().filter(i => i.meta.menuOrder).sort((a, b) => a.meta.menuOrder - b.meta.menuOrder));
+const menuRoutes = ref(
+  useRouter()
+    .getRoutes()
+    .filter(i => i.meta.menuOrder)
+    .filter(i => i.name != 'index')
+    .sort((a, b) => a.meta.menuOrder - b.meta.menuOrder)
+);
 </script>

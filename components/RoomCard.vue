@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card min-width="200" width="250" max-width="300" :to="{ name: route }">
+    <v-card min-width="200" width="250" max-width="300" :to="route">
       <v-img
         cover
         height="200"
@@ -21,7 +21,7 @@
 
       <v-card-actions >
         <v-spacer />
-        <v-btn color="primary" variant="text" :to="{ name: route }">
+        <v-btn color="primary" variant="text" :to="route">
           Saiba mais
         </v-btn>
         <v-spacer />
