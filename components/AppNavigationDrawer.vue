@@ -34,5 +34,5 @@ const menuRoutes = ref(
     .filter(i => i.meta.menuOrder)
     .filter(i => i.name != 'index')
     .sort((a, b) => a.meta.menuOrder - b.meta.menuOrder)
-);
+)
 </script>
