@@ -64,6 +64,17 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Pé da Serra Hotel',
+  meta: [
+    {
+      name: 'description',
+      content: 'Quarto exemplo 1.',
+    },
+  ],
+});
+
 import PhotoGallery from '@/components/PhotoGallery.vue';
 import RoomFeature from '@/components/RoomFeature.vue';
 import img1 from "@/assets/example/img-1.jpg";

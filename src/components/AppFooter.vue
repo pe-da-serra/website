@@ -1,9 +1,9 @@
 <template>
-  <img src="../assets/mountain-1-big.svg" class="pt-10" />
+  <img src="../assets/mountain-1-big.svg" class="pt-10" alt="Divisor de seção em formato de montanhas." />
   <v-footer class="py-10" theme="dark" color="#293F00" style="margin-top: -1px;">
     <v-row>
       <v-col cols="12" md="4" class="px-8 text-center">
-        <img src="../assets/logo-white.svg" style="max-height: 100px;">
+        <img src="../assets/logo-white.svg" style="max-height: 100px;" alt="Logotipo do hotel em branco.">
         <div>
           <v-btn
             class="mx-4"

@@ -5,7 +5,7 @@
 
       <v-app-bar-title class="text-center">
         <router-link :to="{ name: routeNames.home }">
-          <img src="@/assets/logo.svg" style="max-height: 52px;" />
+          <img src="@/assets/logo.svg" style="max-height: 52px;" alt="Pé da Serra Hotel"/>
         </router-link>
       </v-app-bar-title>
       <!-- <v-btn v-if="!mobile" variant="outlined">Reservar</v-btn> -->
