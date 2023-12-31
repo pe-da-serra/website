@@ -1,0 +1,11 @@
+{
+    "name": "Pé da Serra Hotel",
+    "short_name": "Pé da Serra",
+    "icons": [{
+        "src": "favicon.sfg",
+        "sizes": "512x512"
+    }],
+    "background_color": "#eff3ef",
+    "theme_color": "#293F00",
+    "display": "fullscreen"
+}
