@@ -7,24 +7,12 @@
     :height="carouselHeight"
   >
     <v-carousel-item
-      src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
-      lazy-src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-      :height="carouselHeight"
-      alt="Homepage banner 1"
-      cover
-    />
-    <v-carousel-item
-      src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      lazy-src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-      alt="Homepage banner 2"
-      :height="carouselHeight"
-      cover
-    />
-    <v-carousel-item
-      src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-      lazy-src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-      alt="Homepage banner 3"
-      :height="carouselHeight"
+      v-for="img in images"
+      :key="img"
+      :src="img"
+      :lazy-src="lazyImg"
+      height="100%"
+      alt="Homepage banner"
       cover
     />
   </v-carousel>
@@ -79,11 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
-import { useDisplay } from 'vuetify'
-import NumberInput from '@/components/NumberInput.vue'
-import DateInput from '@/components/DateInput.vue';
-
+// Head
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Pé da Serra Hotel',
@@ -95,8 +79,22 @@ useHead({
   ],
 });
 
+// Carousel
+import { useDisplay } from 'vuetify'
 const { smAndDown } = useDisplay()
 var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));
+
+import { lazyImg } from '@/features/image';
+import img1 from '@/assets/example/img-1.jpg';
+import img2 from '@/assets/example/img-2.jpg';
+import img3 from '@/assets/example/img-3.jpg';
+
+const images = [ img1, img2, img3 ];
+
+// Booking form
+import { ref, computed } from 'vue';
+import NumberInput from '@/components/NumberInput.vue'
+import DateInput from '@/components/DateInput.vue';
 
 const guests = ref(2);
 const startDate = ref(new Date);
@@ -107,13 +105,11 @@ today.setHours(0, 0, 0, 0);
 startDate.value.setDate(startDate.value.getDate() + 1);
 endDate.value.setDate(endDate.value.getDate() + 3);
 
-// if the new start date is after the current end date, update also the end date to be the same as the start date
 function updateStartDate(date: Date): void {
   if (date > endDate.value) endDate.value = date;
   startDate.value = date;
 }
 
-// if start date is after the new end date, update also the start date to be the same as the end date
 function updateEndDate(date: Date): void {
   if (date < startDate.value) startDate.value = date;
   endDate.value = date;

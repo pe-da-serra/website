@@ -108,12 +108,12 @@ useHead({
   ],
 });
 
+import { lazyImg } from '@/features/image';
 import img1 from '@/assets/example/img-1.jpg';
 import img2 from '@/assets/example/img-2.jpg';
 import img3 from '@/assets/example/img-3.jpg';
 
 const images = [ img1, img2, img3 ];
 
-const lazyImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj0Osy+Q8AA8IB7D01A4UAAAAASUVORK5CYII=';
 
 </script>
