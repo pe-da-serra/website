@@ -29,6 +29,8 @@
               v-for="img in images"
               :key="img"
               :src="img"
+              :lazy-src="lazyImg"
+              height="100%"
               cover
             />
           </v-carousel>
@@ -111,5 +113,7 @@ import img2 from '@/assets/example/img-2.jpg';
 import img3 from '@/assets/example/img-3.jpg';
 
 const images = [ img1, img2, img3 ];
+
+const lazyImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj0Osy+Q8AA8IB7D01A4UAAAAASUVORK5CYII=';
 
 </script>
