@@ -1,5 +1,5 @@
 // Composables
-import { createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 export const routeNames = {
   home: 'Home',
@@ -64,13 +64,13 @@ export const routes = [
 
 export const routerOptions = {
   routes,
-  // history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   scrollBehavior() {
     // always scroll to top
     return { top: 0, smooth: true }
   },
 };
 
-// const router = createRouter(routerOptions);
+const router = createRouter(routerOptions);
 
-// export default router
+export default router
