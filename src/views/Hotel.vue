@@ -14,13 +14,17 @@
           </p>
           <v-divider length="100" thickness="1" class="mt-1 mb-4 border-opacity-75"></v-divider>
           <p class="text-justify pt-2">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem nisi aperiam, doloremque libero dolorem hic deleniti maiores! Ipsam fuga libero, id culpa mollitia quas placeat. Dolorem eius obcaecati laboriosam velit?
+            Localizado no coração de Resende, o <b>Pé da Serra Hotel</b> é ideal para quem vem a trabalho em Resende, Porto Real ou Itatiaia.
+            Em poucos passos, você pode encontrar diversas opções de restaurantes, supermercados, lojas e academias.
           </p>
           <p class="text-justify pt-2">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iste itaque saepe molestias ullam dignissimos suscipit voluptate delectus quo sunt placeat, perspiciatis quaerat assumenda voluptas accusantium, incidunt quibusdam nobis repellendus est!
+            A menos de 500m da AMAN (Academia Militar das Agulhas Negras), o hotel é um excelente ponto de hospedagem para oficiais do exército e seus parentes.
           </p>
           <p class="text-justify pt-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo ipsum facere omnis quibusdam earum, aliquid molestiae beatae modi, rerum provident, ex deleniti laudantium quis nemo esse odit ea autem id?
+            Também é ponto de partida perfeito para descobrir as belezas naturais da região da serra da Mantiqueira como Penedo, Parque Nacional de Itatiaia e Pico das Agulhas Negras.
+          </p>
+          <p class="text-justify pt-2">
+            O <b>Pé da Serra Hotel</b> foi recentemente reformado para oferecer todo conforto aos seus hóspedes, disponibilizando quartos de solteiro, casal, duplo e triplo que cabem no seu bolso.
           </p>
         </v-col>
         <v-col cols="12" md="6" class="px-0 px-md-3">
@@ -48,16 +52,16 @@
         <v-col cols="12" md="6" class="pb-0 pb-md-3">
           <v-list class="pb-0 pb-md-2">
             <v-list-item>
-              <v-icon start color="secondary">mdi-car-outline</v-icon>
-              Estacionamento
-            </v-list-item>
-            <v-list-item>
               <v-icon start color="secondary">mdi-wifi</v-icon>
               Rede Wi-Fi
             </v-list-item>
             <v-list-item>
               <v-icon start color="secondary">mdi-coffee-outline</v-icon>
               Café da manhã
+            </v-list-item>
+            <v-list-item>
+              <v-icon start color="secondary">mdi-snowflake</v-icon>
+              Ar condicionado
             </v-list-item>
           </v-list>
         </v-col>
