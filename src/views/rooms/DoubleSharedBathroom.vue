@@ -4,8 +4,8 @@
       <PhotoGallery :images="images" />
       <v-row class="px-8 px-sm-0 mt-1 mb-5" justify="center">
         <v-col cols="12" md="8">
-          <p class="text-h5 font-weight-medium">Quarto Exemplo</p >
-          <p class="text-subtitle-1">2 hóspedes • 1 cama</p>
+          <p class="text-h5 font-weight-medium">Duplo - banheiro compartilhado</p >
+          <p class="text-subtitle-1">2 hóspedes • 2 camas</p>
           <p class="py-3 text-justify">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum eos, ad aliquam autem maiores, ducimus modi exercitationem nihil aperiam tempora, magni necessitatibus incidunt quae unde eligendi eaque dolore! Consequatur, incidunt!
           </p>
@@ -15,17 +15,15 @@
             <v-col>
               <v-list bg-color="background">
                 <RoomFeature icon="mdi-bed-queen-outline" text="Cama de casal" />
-                <RoomFeature icon="mdi-shower-head" text="Banheiro privativo" />
-                <RoomFeature icon="mdi-wifi" text="Rede Wi-Fi" />
-                <RoomFeature icon="mdi-television" text="Televisão LED" />
+                <RoomFeature icon="mdi-shower-head" text="Banheiro compartilihado" />
+                <RoomFeature icon="mdi-coffee-outline" text="Café da manhã" />
               </v-list>
             </v-col>
             <v-col>
               <v-list bg-color="background">
-                <RoomFeature icon="mdi-car-outline" text="Estacionamento" />
-                <RoomFeature icon="mdi-fridge-industrial-outline" text="Frigobar" />
-                <RoomFeature icon="mdi-ceiling-fan" text="Ventilador de teto" />
-                <RoomFeature icon="mdi-phone-classic" text="Telefone" />
+                <RoomFeature icon="mdi-wifi" text="Rede Wi-Fi" />
+                <RoomFeature icon="mdi-television" text="Televisão LED" />
+                <RoomFeature icon="mdi-snowflake" text="Ar condicionado" />
               </v-list>
             </v-col>
           </v-row>
@@ -70,7 +68,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Quarto exemplo 1.',
+      content: 'Quarto duplo com banheiro compartilhado.',
     },
   ],
 });

@@ -8,7 +8,12 @@ export const routeNames = {
   photos: 'Photos',
   contact: 'Contact',
   room: {
-    example: 'ExampleRoom'
+    single: 'SingleRoom',
+    couple: 'CoupleRoom',
+    triple: 'TripleRoom',
+    double: 'DoubleRoom',
+    doubleSharedBathroom: 'DoubleSharedBathroomRoom',
+    apartment: 'ApartmentRoom',
   }
 }
 
@@ -54,9 +59,34 @@ export const routes = [
         component: () => import(/* webpackChunkName: "contact" */ '@/views/Contact.vue'),
       },
       {
-        path: 'quartos/exemplo-1',
-        name: routeNames.room.example,
-        component: () => import(/* webpackChunkName: "rooms-example1" */ '@/views/rooms/Example.vue'),
+        path: 'quartos/solteiro',
+        name: routeNames.room.single,
+        component: () => import(/* webpackChunkName: "rooms-single" */ '@/views/rooms/Single.vue'),
+      },
+      {
+        path: 'quartos/casal',
+        name: routeNames.room.couple,
+        component: () => import(/* webpackChunkName: "rooms-couple" */ '@/views/rooms/Couple.vue'),
+      },
+      {
+        path: 'quartos/triplo',
+        name: routeNames.room.triple,
+        component: () => import(/* webpackChunkName: "rooms-triple" */ '@/views/rooms/Triple.vue'),
+      },
+      {
+        path: 'quartos/duplo',
+        name: routeNames.room.double,
+        component: () => import(/* webpackChunkName: "rooms-double" */ '@/views/rooms/Double.vue'),
+      },
+      {
+        path: 'quartos/duplo-banheiro-compartilhado',
+        name: routeNames.room.doubleSharedBathroom,
+        component: () => import(/* webpackChunkName: "rooms-double-shared-bathroom" */ '@/views/rooms/DoubleSharedBathroom.vue'),
+      },
+      {
+        path: 'quartos/apartamento',
+        name: routeNames.room.apartment,
+        component: () => import(/* webpackChunkName: "rooms-apartment" */ '@/views/rooms/Apartment.vue'),
       },
     ],
   },

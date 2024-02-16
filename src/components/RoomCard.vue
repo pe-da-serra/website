@@ -11,7 +11,7 @@
         <v-card-title>{{ title }}</v-card-title>
 
         <v-card-subtitle>
-          <span class="me-1">{{ guests }} hóspedes • {{ beds }} cama</span>
+          <span class="me-1">{{ guests }} hóspede{{ guests > 1 ? 's' : '' }} • {{ beds }} cama{{ beds > 1 ? 's' : '' }}</span>
         </v-card-subtitle>
       </v-card-item>
 
