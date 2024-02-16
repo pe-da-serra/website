@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 Disallow: /cgi-bin/
-Sitemap: https://pedaserrahote.com.br
+Sitemap: https://pedaserrahotel.com.br/sitemap.xml
