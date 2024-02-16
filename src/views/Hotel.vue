@@ -113,11 +113,9 @@ useHead({
 });
 
 import { lazyImg } from '@/features/image';
-import img1 from '@/assets/example/img-1.jpg';
-import img2 from '@/assets/example/img-2.jpg';
-import img3 from '@/assets/example/img-3.jpg';
+import hotel1 from '@/assets/hotel1.jpg';
+import hotel2 from '@/assets/hotel2.jpg';
 
-const images = [ img1, img2, img3 ];
-
+const images = [ hotel1, hotel2 ];
 
 </script>
