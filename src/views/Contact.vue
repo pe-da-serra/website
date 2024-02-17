@@ -15,64 +15,45 @@
         <div class="d-flex">
           <v-spacer />
           <div>
-            <p class="py-2">
-              <v-icon icon="mdi-phone-outline" start />
-              (24) 3355-1234
-            </p>
-            <p class="py-2">
-              <v-icon icon="mdi-whatsapp" start />
-              (24) 98765-4321
-            </p>
-            <p class="py-2">
-              <v-icon icon="mdi-email-outline" start />
-              reserva@pedaserrahotel.com.br
-            </p>
-            <p class="pt-2">
-              <v-icon icon="mdi-map-marker-outline" start />
-              Rua Luís Pistarini, 43
-            </p>
-            <p>
-              <v-icon start />
-              Campos Elíseos, Resende - RJ
-            </p>
-            <p>
-              <v-icon start />
-              27542-090
-            </p>
+            <a :href="url.phone" target="_blank" class="contact-link">
+              <p class="py-2">
+                <v-icon icon="mdi-phone-outline" color="secondary" start />
+                {{ phone }}
+              </p>
+            </a>
+            <a :href="url.whatsapp" target="_blank" class="contact-link">
+              <p class="py-2">
+                <v-icon icon="mdi-whatsapp" color="secondary" start />
+                {{ whatsapp }}
+              </p>
+            </a>
+            <a :href="url.email" target="_blank" class="contact-link">
+              <p class="py-2">
+                <v-icon icon="mdi-email-outline" color="secondary" start />
+                {{ email }}
+              </p>
+            </a>
+            <a :href="url.address" target="_blank" class="contact-link" >
+              <p class="pt-2">
+                <v-icon icon="mdi-map-marker-outline" start />
+                {{ address[0] }}
+              </p>
+              <p
+                v-for="(line, index) in address.filter((l, i) => i !== 0)"
+                :key="index"
+              >
+                <v-icon start />
+                {{ line }}
+              </p>
+            </a>
           </div>
           <v-spacer />
         </div>
       </div>
     </v-col>
-    <!-- <v-col cols="12" lg="3" class="pl-0">
-      <div class="h-100 d-flex flex-column justify-space-evenly px-7">
-        <div class="text-center">
-          <p class="text-h4">Localização</p>
-          <v-divider length="100" class="mx-auto mt-4"/>
-        </div>
-        <div class="d-flex">
-          <v-spacer />
-          <div>
-            <p class="py-1">
-              <v-icon icon="mdi-map-marker-outline" start />
-              Rua Luís Pistarini, 43
-            </p>
-            <p class="py-1">
-              <v-icon start />
-              Campos Elíseos, Resende - RJ
-            </p>
-            <p class="py-1">
-              <v-icon start />
-              27542-090
-            </p>
-          </div>
-          <v-spacer />
-        </div>
-      </div>
-    </v-col> -->
     <v-col cols="12" lg="6" class="pa-0" style="height: 50vh;">
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7374.1661184159375!2d-44.4525732524744!3d-22.46351284423203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9e7e9077b3a101%3A0x3e84f2592afb26ae!2sHotel%20Presidente%20de%20Resende!5e0!3m2!1spt-BR!2sbr!4v1702791207455!5m2!1spt-BR!2sbr"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3687.0951394226545!2d-44.45068542394605!3d-22.463058822164943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9e7e9a9d90dee1%3A0xad22210199efec59!2sR.%20Lu%C3%ADs%20Pistarini%2C%2043%20-%20Campos%20El%C3%ADseos%2C%20Resende%20-%20RJ%2C%2027542-090!5e0!3m2!1spt-BR!2sbr!4v1708193734693!5m2!1spt-BR!2sbr"
         width="100%"
         height="100%"
         style="border: 0; border-left: solid 0.1px grey;"
@@ -82,40 +63,6 @@
       />
     </v-col>
   </v-row>
-  <!-- <v-row justify="center" class="my-10">
-    <v-col md="10" xl="7" class="pa-0">
-      <v-card>
-        <v-card-text>
-          <v-form>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field variant="outlined" label="Nome completo" />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field variant="outlined" label="E-mail" />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field variant="outlined" label="Telefone" />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field variant="outlined" label="Assunto" />
-              </v-col>
-              <v-col>
-                <v-textarea variant="outlined" label="Mensagem" />
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-card-text>
-        <v-card-actions >
-          <v-spacer />
-          <v-btn color="primary" variant="flat" size="large" class="px-8">
-            Enviar
-          </v-btn>
-          <v-spacer />
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row> -->
 </template>
 
 <script setup lang="ts">
@@ -130,7 +77,12 @@ useHead({
   ],
 });
 
-import { useDisplay } from 'vuetify/lib/framework.mjs';
-
-const { xs, sm, md, lg, xl } = useDisplay();
+import { phone, whatsapp, email, address, url } from '@/features/contact';
 </script>
+
+<style scoped>
+.contact-link {
+  color: inherit;
+  text-decoration: none;
+}
+</style>

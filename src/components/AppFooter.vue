@@ -10,18 +10,24 @@
             icon="mdi-instagram"
             variant="text"
             color="white"
+            :href="url.instagram"
+            target="_blank"
           />
           <v-btn
             class="mx-4"
             icon="mdi-whatsapp"
             variant="text"
             color="white"
+            :href="url.whatsapp"
+            target="_blank"
           />
           <v-btn
             class="mx-4"
             icon="mdi-phone-outline"
             variant="text"
             color="white"
+            :href="url.phone"
+            target="_blank"
           />
         </div>
         <!-- <v-divider class="my-2"/> -->
@@ -41,30 +47,37 @@
         <p class="text-center text-h6 pb-5">ATENDIMENTO</p>
         <v-row justify="center">
           <v-col cols="10">
-            <p class="py-1">
-              <v-icon icon="mdi-phone-outline" start />
-              (24) 3355-1234
-            </p>
-            <p class="py-1">
-              <v-icon icon="mdi-whatsapp" start />
-              (24) 98765-4321
-            </p>
-            <p class="py-1">
-              <v-icon icon="mdi-email-outline" start />
-              reserva@pedaserrahotel.com.br
-            </p>
-            <p class="pt-1">
-              <v-icon icon="mdi-map-marker-outline" start />
-              Rua Luís Pistarini, 43
-            </p>
-            <p>
-              <v-icon start />
-              Campos Elíseos, Resende - RJ
-            </p>
-            <p>
-              <v-icon start />
-              27542-090
-            </p>
+            <a :href="url.phone" target="_blank" class="footer-link">
+              <p class="py-1">
+                <v-icon icon="mdi-phone-outline" start />
+                {{ phone }}
+              </p>
+            </a>
+            <a :href="url.whatsapp" target="_blank" class="footer-link">
+              <p class="py-1">
+                <v-icon icon="mdi-whatsapp" start />
+                {{ whatsapp }}
+              </p>
+            </a>
+            <a :href="url.email" target="_blank" class="footer-link">
+              <p class="py-1">
+                <v-icon icon="mdi-email-outline" start />
+                {{ email }}
+              </p>
+            </a>
+            <a :href="url.address" target="_blank" class="footer-link">
+              <p class="pt-1">
+                <v-icon icon="mdi-map-marker-outline" start />
+                {{ address[0] }}
+              </p>
+              <p
+                v-for="(line, index) in address.filter((l, i) => i !== 0)"
+                :key="index"
+              >
+                <v-icon start />
+                {{ line }}
+              </p>
+            </a>
           </v-col>
         </v-row>
       </v-col>
@@ -73,6 +86,14 @@
 </template>
 
 <script setup lang="ts">
+import { phone, whatsapp, email, address, url } from '@/features/contact';
 import { menuRoutes } from '@/router';
 
 </script>
+
+<style scoped>
+.footer-link {
+  color: inherit;
+  text-decoration: none;
+}
+</style>
