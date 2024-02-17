@@ -81,5 +81,7 @@ import img1 from "@/assets/example/img-1.jpg";
 import img2 from "@/assets/example/img-2.jpg";
 import img3 from "@/assets/example/img-3.jpg";
 
+const images = [img1, img2, img3, img1, img2];
+
 import { bookingUrl, RoomType } from '@/features/booking';
 </script>
