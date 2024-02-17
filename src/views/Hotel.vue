@@ -14,14 +14,14 @@
           </p>
           <v-divider length="100" thickness="1" class="mt-1 mb-4 border-opacity-75"></v-divider>
           <p class="text-justify pt-2">
-            Localizado no coração de Resende, o <b>Pé da Serra Hotel</b> é ideal para quem vem a trabalho em Resende, Porto Real ou Itatiaia.
+            Localizado no coração de Resende, o <b>Pé da Serra Hotel</b> é ideal para quem vem trabalhar em Resende, Porto Real ou Itatiaia.
             Em poucos passos, você pode encontrar diversas opções de restaurantes, supermercados, lojas e academias.
           </p>
           <p class="text-justify pt-2">
             A menos de 500m da AMAN (Academia Militar das Agulhas Negras), o hotel é um excelente ponto de hospedagem para oficiais do exército e seus parentes.
           </p>
           <p class="text-justify pt-2">
-            Também é ponto de partida perfeito para descobrir as belezas naturais da região da serra da Mantiqueira como Penedo, Parque Nacional de Itatiaia e Pico das Agulhas Negras.
+            Também é ponto de partida perfeito para descobrir as belezas naturais da região da Serra da Mantiqueira como Penedo, Parque Nacional de Itatiaia e Pico das Agulhas Negras.
           </p>
           <p class="text-justify pt-2">
             O <b>Pé da Serra Hotel</b> foi recentemente reformado para oferecer todo conforto aos seus hóspedes, disponibilizando quartos de solteiro, casal, duplo e triplo que cabem no seu bolso.
