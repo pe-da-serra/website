@@ -77,10 +77,12 @@ useHead({
 
 import PhotoGallery from '@/components/PhotoGallery.vue';
 import RoomFeature from '@/components/RoomFeature.vue';
-import img1 from "@/assets/example/img-1.jpg";
-import img2 from "@/assets/example/img-2.jpg";
-import img3 from "@/assets/example/img-3.jpg";
+import img1 from "@/assets/double-1.jpg";
+import img2 from "@/assets/double-2.jpg";
+import img3 from "@/assets/double-3.jpg";
+import img4 from "@/assets/double-4.jpg";
+import img5 from "@/assets/double-5.jpg";
 import { RoomType, bookingUrl } from '@/features/booking';
 
-const images = [img1, img2, img3, img1, img2];
+const images = [img1, img2, img3, img4, img5];
 </script>

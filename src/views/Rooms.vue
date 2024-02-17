@@ -39,10 +39,11 @@ import { ref } from 'vue';
 import RoomCard from '@/components/RoomCard.vue';
 import { routeNames } from '@/router';
 import img1 from '@/assets/example/img-1.jpg';
+import doubleImg from '@/assets/double-1.jpg';
 
 const rooms = ref([
   { title: "Solteiro", guests: 1, beds: 1, route: routeNames.room.single, image: img1 },
-  { title: "Duplo", guests: 2, beds: 2, route: routeNames.room.double, image: img1 },
+  { title: "Duplo", guests: 2, beds: 2, route: routeNames.room.double, image: doubleImg },
   { title: "Duplo banheiro compartilhado", guests: 2, beds: 2, route: routeNames.room.doubleSharedBathroom, image: img1 },
   { title: "Casal", guests: 2, beds: 1, route: routeNames.room.couple, image: img1 },
   { title: "Triplo", guests: 3, beds: 3, route: routeNames.room.triple, image: img1 },
