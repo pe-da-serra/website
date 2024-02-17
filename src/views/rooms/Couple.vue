@@ -49,6 +49,8 @@
                 prepend-icon="mdi-calendar-clock"
                 text="Reservar"
                 class="mt-4"
+                :href="bookingUrl({ room: RoomType.Couple, })"
+                target="_blank"
               />
               <v-divider class="my-7"/>
               <v-btn variant="outlined" icon="mdi-whatsapp" class="mr-5"/>
@@ -78,6 +80,7 @@ import RoomFeature from '@/components/RoomFeature.vue';
 import img1 from "@/assets/example/img-1.jpg";
 import img2 from "@/assets/example/img-2.jpg";
 import img3 from "@/assets/example/img-3.jpg";
+import { RoomType, bookingUrl } from '@/features/booking';
 
 const images = [img1, img2, img3, img1, img2];
 </script>

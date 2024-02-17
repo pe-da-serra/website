@@ -59,6 +59,8 @@
             color="primary"
             text="Reservar"
             size="large"
+            :href="bookingUrl({ start: startDate, end: endDate, guests })"
+            target="_blank"
           />
         </v-card-actions>
       </v-card>
@@ -95,6 +97,7 @@ const images = [ img1, img2, img3 ];
 import { ref, computed } from 'vue';
 import NumberInput from '@/components/NumberInput.vue'
 import DateInput from '@/components/DateInput.vue';
+import { bookingUrl } from '@/features/booking';
 
 const guests = ref(2);
 const startDate = ref(new Date);

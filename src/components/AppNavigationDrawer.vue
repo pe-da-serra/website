@@ -5,7 +5,11 @@
     temporary
   >
     <v-list>
-      <v-list-item prepend-icon="mdi-calendar-outline">
+      <v-list-item
+        prepend-icon="mdi-calendar-outline"
+        :href="bookingUrl()"
+        target="_blank"
+      >
         Reservar
       </v-list-item>
 
@@ -22,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { bookingUrl } from '@/features/booking';
 import { routeNames, menuRoutes } from '@/router';
 
 defineProps(['value']);
