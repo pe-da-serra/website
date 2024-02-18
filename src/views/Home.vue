@@ -1,7 +1,7 @@
 <template>
   <v-carousel
     hide-delimiters
-    show-arrows="hover"
+    :show-arrows="images.length > 1 ? 'hover' : false"
     touch
     cycle
     :height="carouselHeight"
@@ -87,7 +87,7 @@ const { smAndDown } = useDisplay()
 var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));
 
 import { lazyImg } from '@/features/image';
-import img1 from '@/assets/hotel-1-lg.jpg';
+import img1 from '@/assets/region-1-lg.jpg';
 
 const images = [ img1 ];
 
