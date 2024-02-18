@@ -10,7 +10,7 @@ export const routeNames = {
   room: {
     single: 'SingleRoom',
     couple: 'CoupleRoom',
-    triple: 'TripleRoom',
+    // triple: 'TripleRoom',
     double: 'DoubleRoom',
     doubleSharedBathroom: 'DoubleSharedBathroomRoom',
     apartment: 'ApartmentRoom',
@@ -68,11 +68,11 @@ export const routes = [
         name: routeNames.room.couple,
         component: () => import(/* webpackChunkName: "rooms-couple" */ '@/views/rooms/Couple.vue'),
       },
-      {
-        path: 'quartos/triplo',
-        name: routeNames.room.triple,
-        component: () => import(/* webpackChunkName: "rooms-triple" */ '@/views/rooms/Triple.vue'),
-      },
+      // {
+      //   path: 'quartos/triplo',
+      //   name: routeNames.room.triple,
+      //   component: () => import(/* webpackChunkName: "rooms-triple" */ '@/views/rooms/Triple.vue'),
+      // },
       {
         path: 'quartos/duplo',
         name: routeNames.room.double,
