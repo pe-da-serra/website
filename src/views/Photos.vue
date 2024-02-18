@@ -58,9 +58,14 @@ useHead({
 
 import { ref } from 'vue';
 import PhotoGalleryDialog from '@/components/PhotoGalleryDialog.vue';
-import img1 from '@/assets/example/img-1.jpg';
-import img2 from '@/assets/example/img-2.jpg';
-import img3 from '@/assets/example/img-3.jpg';
+import hotel1 from '@/assets/hotel-1.jpg';
+import hotel2 from '@/assets/hotel-2.jpg';
+import room1 from '@/assets/single-1.jpg';
+import room2 from '@/assets/double-1.jpg';
+import room3 from '@/assets/double-shared-bathroom-1.jpg';
+import room4 from '@/assets/couple-1.jpg';
+import room5 from '@/assets/apartment-1.jpg';
+import region1 from '@/assets/region-1.jpg';
 import { computed } from 'vue';
 
 // Tabs
@@ -74,15 +79,14 @@ const currentTab = ref(Tab.All);
 
 // Images
 const images = ref([
-  { source: img1, tags: [ Tab.Hotel ] },
-  { source: img2, tags: [ Tab.Hotel ] },
-  { source: img3, tags: [ Tab.Hotel ] },
-  { source: img1, tags: [ Tab.Rooms ] },
-  { source: img2, tags: [ Tab.Rooms ] },
-  { source: img3, tags: [ Tab.Rooms ] },
-  { source: img1, tags: [ Tab.Region ] },
-  { source: img2, tags: [ Tab.Region ] },
-  { source: img3, tags: [ Tab.Region ] },
+  { source: hotel1, tags: [ Tab.Hotel ] },
+  { source: hotel2, tags: [ Tab.Hotel ] },
+  { source: room1, tags: [ Tab.Rooms ] },
+  { source: room2, tags: [ Tab.Rooms ] },
+  { source: room3, tags: [ Tab.Rooms ] },
+  { source: room4, tags: [ Tab.Rooms ] },
+  { source: room5, tags: [ Tab.Rooms ] },
+  { source: region1, tags: [ Tab.Region ] },
 ]);
 const filteredImages = computed(() => {
   let imagesWithIndex = images.value.map((img, idx) => ({ ...img, index: idx}));
