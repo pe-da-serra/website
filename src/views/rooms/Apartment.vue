@@ -6,16 +6,14 @@
         <v-col cols="12" md="8">
           <p class="text-h5 font-weight-medium">Apartamento</p >
           <p class="text-subtitle-1">4 hóspedes • 3 camas</p>
-          <p class="py-3 text-justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum eos, ad aliquam autem maiores, ducimus modi exercitationem nihil aperiam tempora, magni necessitatibus incidunt quae unde eligendi eaque dolore! Consequatur, incidunt!
-          </p>
+
           <v-divider class="my-4"/>
           <p class="text-h6 font-weight-medium">Comodidades</p >
           <v-row>
             <v-col>
               <v-list bg-color="background">
                 <RoomFeature icon="mdi-bed-queen-outline" text="1 cama de casal e 2 camas de solteiro" />
-                <RoomFeature icon="mdi-shower-head" text="Banheiro privatido" />
+                <RoomFeature icon="mdi-shower-head" text="Banheiro privado" />
                 <RoomFeature icon="mdi-coffee-outline" text="Café da manhã" />
               </v-list>
             </v-col>
