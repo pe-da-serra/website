@@ -14,7 +14,7 @@
           align-tabs="center"
         >
           <v-tab :value="Tab.All">Tudo</v-tab>
-          <v-tab :value="Tab.Hotel">Infraestrutura</v-tab>
+          <v-tab :value="Tab.Hotel">Hotel</v-tab>
           <v-tab :value="Tab.Rooms">Quartos</v-tab>
           <v-tab :value="Tab.Region">Região</v-tab>
         </v-tabs>
@@ -24,10 +24,10 @@
               v-for="(image, index) in filteredImages"
               :key="index"
               :src="image.source"
-              min-width="200"
-              max-width="200"
-              min-height="200"
-              max-height="200"
+              min-width="160"
+              max-width="160"
+              min-height="160"
+              max-height="160"
               cover
               class="ma-2 rounded dark-on-hover"
               @click="openDialogAtIndex(image.index)"
