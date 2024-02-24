@@ -14,7 +14,7 @@
           align-tabs="center"
         >
           <v-tab :value="Tab.All">Tudo</v-tab>
-          <v-tab :value="Tab.Hotel">Infraestrutura</v-tab>
+          <v-tab :value="Tab.Hotel">Hotel</v-tab>
           <v-tab :value="Tab.Rooms">Quartos</v-tab>
           <v-tab :value="Tab.Region">Região</v-tab>
         </v-tabs>
@@ -24,10 +24,10 @@
               v-for="(image, index) in filteredImages"
               :key="index"
               :src="image.source"
-              min-width="200"
-              max-width="200"
-              min-height="200"
-              max-height="200"
+              min-width="160"
+              max-width="160"
+              min-height="160"
+              max-height="160"
               cover
               class="ma-2 rounded dark-on-hover"
               @click="openDialogAtIndex(image.index)"
@@ -66,6 +66,10 @@ import room3 from '@/assets/double-shared-bathroom-1.jpg';
 import room4 from '@/assets/couple-1.jpg';
 import room5 from '@/assets/apartment-1.jpg';
 import region1 from '@/assets/region-1.jpg';
+import region2 from '@/assets/region-2-lg.jpg';
+import region3 from '@/assets/region-3-lg.jpg';
+import region4 from '@/assets/region-4-lg.jpg';
+import region5 from '@/assets/region-5-lg.jpg';
 import { computed } from 'vue';
 
 // Tabs
@@ -87,6 +91,10 @@ const images = ref([
   { source: room4, tags: [ Tab.Rooms ] },
   { source: room5, tags: [ Tab.Rooms ] },
   { source: region1, tags: [ Tab.Region ] },
+  { source: region2, tags: [ Tab.Region ] },
+  { source: region3, tags: [ Tab.Region ] },
+  { source: region4, tags: [ Tab.Region ] },
+  { source: region5, tags: [ Tab.Region ] },
 ]);
 const filteredImages = computed(() => {
   let imagesWithIndex = images.value.map((img, idx) => ({ ...img, index: idx}));

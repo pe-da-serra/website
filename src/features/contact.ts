@@ -1,5 +1,5 @@
-export const phone = "(24) 99998-8330";
-export const whatsapp = "(24) 99998-8330";
+export const phone = "(24) 3384-7550";
+export const whatsapp = "(24) 3384-7550";
 export const email = "contato@pedaserrahotel.com.br";
 export const address = [
   "Rua Luís Pistarini, 43",

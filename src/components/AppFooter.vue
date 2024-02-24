@@ -43,9 +43,10 @@
           <p class="mb-2">{{ i.title }}</p>
         </router-link>
       </v-col>
-      <v-col cols="12" md="4" class="px-8">
+      <v-col cols="12" md="4" class="px-1">
         <p class="text-center text-h6 pb-5">ATENDIMENTO</p>
         <v-row justify="center">
+          <v-col cols="1"></v-col>
           <v-col cols="10">
             <a :href="url.phone" target="_blank" class="footer-link">
               <p class="py-1">

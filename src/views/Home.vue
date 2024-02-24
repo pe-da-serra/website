@@ -88,8 +88,12 @@ var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));
 
 import { lazyImg } from '@/features/image';
 import img1 from '@/assets/region-1-lg.jpg';
+import img2 from '@/assets/region-2-lg.jpg';
+import img3 from '@/assets/region-3-lg.jpg';
+import img4 from '@/assets/region-4-lg.jpg';
+import img5 from '@/assets/region-5-lg.jpg';
 
-const images = [ img1 ];
+const images = [ img3, img4, img5 ];
 
 // Booking form
 import { ref, computed } from 'vue';
