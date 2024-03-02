@@ -1,5 +1,5 @@
 export const bookingUrl = (options: BookingOptions = {}) => {
-  const phone = "5524999988330";
+  const phone = "552433847550";
 
   var text = "Olá, gostaria fazer uma reserva no *Pé da Serra Hotel*.\n";
 
