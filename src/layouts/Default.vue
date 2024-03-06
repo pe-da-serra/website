@@ -3,14 +3,21 @@
     <v-app-bar scroll-behavior="elevate">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
+
       <v-app-bar-title class="text-center">
         <router-link :to="{ name: routeNames.home }">
-          <img src="@/assets/logo.svg" style="max-height: 52px;" alt="Pé da Serra Hotel"/>
+          <img src="@/assets/logo.svg"
+            style="max-height: 55px; margin-top: 5px;"
+            class=""
+            contain
+            alt="Pé da Serra Hotel"
+          />
         </router-link>
       </v-app-bar-title>
+
       <!-- <v-btn v-if="!mobile" variant="outlined">Reservar</v-btn> -->
       <!-- <v-btn icon="mdi-translate" /> -->
-      <v-btn icon="" disabled></v-btn>
+      <v-btn disabled></v-btn>
     </v-app-bar>
 
     <app-navigation-drawer v-model="drawer" />
