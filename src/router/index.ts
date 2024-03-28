@@ -1,5 +1,9 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { fromIsoDate, useToday } from '@/features/date';
+import { BookProps } from '@/views/Book.vue';
+import { format, formatISO } from 'date-fns';
+import { DateTime } from 'luxon';
+import { RouteLocation, RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
 export const routeNames = {
   home: 'Home',
@@ -7,6 +11,7 @@ export const routeNames = {
   rooms: 'Rooms',
   photos: 'Photos',
   contact: 'Contact',
+  book: 'Book',
   room: {
     single: 'SingleRoom',
     couple: 'CoupleRoom',
@@ -25,7 +30,14 @@ export const menuRoutes = [
   { title: 'Contato', route: routeNames.contact, icon: 'mdi-phone-outline' },
 ]
 
-export const routes = [
+const parseBookRoute = (route: RouteLocationNormalized): BookProps => {
+  return {
+    checkIn: fromIsoDate(route.query.checkin as string),
+    checkOut: fromIsoDate(route.query.checkout as string),
+  };
+}
+
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/layouts/Default.vue'),
@@ -57,6 +69,25 @@ export const routes = [
         path: 'contato',
         name: routeNames.contact,
         component: () => import(/* webpackChunkName: "contact" */ '@/views/Contact.vue'),
+      },
+      {
+        path: 'reserva',
+        name: routeNames.book,
+        component: () => import('@/views/Book.vue'),
+        props: parseBookRoute,
+        beforeEnter: (to, from, next) => {
+          const today = useToday();
+
+          if (!fromIsoDate(to.query.checkin as string).isValid ||
+           !fromIsoDate(to.query.checkout as string).isValid) {
+            to.query.checkin = today.toISODate();
+            to.query.checkout = today.plus({ days: 1 }).toISODate();
+            next(to);
+          }
+
+          next();
+          return true;
+        }
       },
       {
         path: 'quartos/solteiro',

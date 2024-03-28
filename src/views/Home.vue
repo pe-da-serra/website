@@ -59,8 +59,7 @@
             color="primary"
             text="Reservar"
             size="large"
-            :href="bookingUrl({ start: startDate, end: endDate, guests })"
-            target="_blank"
+            :to="'/reserva'"
           />
         </v-card-actions>
       </v-card>
