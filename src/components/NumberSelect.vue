@@ -19,6 +19,7 @@ const props = defineProps<{
   min: number,
   max: number,
   label?: string,
+  disabled?: boolean, // TODO: implement disabled on this input
 }>();
 const emit = defineEmits(['update:model-value']);
 

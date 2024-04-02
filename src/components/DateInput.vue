@@ -54,10 +54,11 @@ import { ref } from 'vue';
 import { useDate, useTheme } from 'vuetify/lib/framework.mjs';
 import 'v-calendar/style.css';
 import { timezone, useToday } from '@/features/date';
+import { DateTime } from 'luxon';
 
 const props = defineProps<{
-  modelValue: Date,
-  minDate?: Date,
+  modelValue: DateTime,
+  minDate?: DateTime,
   variant?: 'filled' | 'outlined' | 'plain' | 'underlined' | 'solo' | 'solo-inverted' | 'solo-filled',
   density?: 'default' | 'comfortable' | 'compact',
   label: string | undefined,
@@ -70,12 +71,12 @@ const menu = ref(false);
 const dateAdapter = useDate();
 const readableDate = computed(() =>  dateAdapter.format(props.modelValue, 'keyboardDate'));
 
-function selectDate(event: Date): void {
+function selectDate(event: DateTime): void {
   emit('update:model-value', event);
   menu.value = false;
 }
 
-function isDateAllowed(date: Date): boolean {
+function isDateAllowed(date: DateTime): boolean {
   if (!props.minDate) return true;
 
   return date >= props.minDate;

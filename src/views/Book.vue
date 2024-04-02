@@ -19,7 +19,7 @@
       />
     </v-col>
     <v-col cols="2">
-      <v-btn @click="search"><v-icon>mdi-magnify</v-icon></v-btn>
+      <v-btn @click="searchBtn"><v-icon>mdi-magnify</v-icon></v-btn>
     </v-col>
   </v-row>
 
@@ -33,26 +33,32 @@
           <div v-else-if="booking.page == 'paymentForm'">
             <BookingPaymentForm />
           </div>
+          <div v-else-if="booking.page == 'pixForm'">
+            <BookingPixForm />
+          </div>
           <div v-else>
-            <div v-if="isPending">
+            <div v-if="searchResult.isPending || rooms.isPending">
               Loading...
             </div>
-            <div v-else-if="isError">
+            <div v-else-if="searchResult.isError || rooms.isError">
               Error!
-              <pre>{{ error }}</pre>
+              <pre>{{ searchResult.error }}</pre>
+              <pre>{{ rooms.error }}</pre>
             </div>
             <div v-else>
-              <pre>{{ data }}</pre>
+              <BookingRoomCard
+                v-for="roomRates in searchResult.data"
+                :room-rates="roomRates"
+                :room="roomFromRate(roomRates)"
+                :checkin="props.checkIn"
+                :checkout="props.checkOut"
+                class="mb-4"
+              />
             </div>
-            <!-- <BookingRoomCard class="mb-4" />
-            <BookingRoomCard class="my-4" />
-            <BookingRoomCard class="my-4" />
-            <BookingRoomCard class="my-4" />
-            <BookingRoomCard class="my-4" /> -->
           </div>
         </v-col>
         <v-col v-if="mdAndUp" cols="12" md="4" class="sticky">
-          <v-card class="w-100">
+          <v-card class="w-100" v-if="booking.selectedRooms.length > 0">
             <BookingSummary
               v-model="summary"
               :is-mobile="false"
@@ -71,7 +77,7 @@
   </v-dialog>
 
   <v-app-bar
-    v-if="smAndDown"
+    v-if="smAndDown && booking.selectedRooms.length > 0"
     location="bottom"
     height="110"
     class="rounded-t-xl pa-0 ma-0"
@@ -80,7 +86,7 @@
       <p class="text-center text-body-1 mt-n1" @click="summary = true">Ver detalhes <v-icon>mdi-chevron-up</v-icon></p>
       <div class="w-100 d-flex align-center px-4 justify-space-between">
         <div>
-          <p class="text-h6 font-weight-bold">R$ 428</p>
+          <p class="text-h6 font-weight-bold">{{ toMoney(totalAmount) }}</p>
           <p>28 mar - 31 mar</p>
         </div>
         <v-btn
@@ -98,16 +104,19 @@
 import DateInput from '@/components/DateInput.vue';
 import BookingGuestForm from '@/components/booking/BookingGuestForm.vue';
 import BookingPaymentForm from '@/components/booking/BookingPaymentForm.vue';
+import BookingPixForm from '@/components/booking/BookingPixForm.vue';
 import BookingSummary from '@/components/booking/BookingSummary.vue';
 import BookingRoomCard from '@/components/booking/BookingRoomCard.vue';
 import { useToday } from '@/features/date';
-import { booking } from '@/features/booking';
+import { Room, RoomRates, booking, search } from '@/features/booking';
+import { useBookingSummary } from '@/features/booking-summary';
+import { toMoney } from '@/features/money';
 import { routeNames } from '@/router';
 import { DateTime } from 'luxon';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
-import { useQuery } from '@tanstack/vue-query';
+import { listRooms } from '@/features/booking';
 
 export type BookProps = {
   checkIn: DateTime,
@@ -115,57 +124,36 @@ export type BookProps = {
 };
 const props = defineProps<BookProps>();
 
-const checkInInput = ref<Date>(props.checkIn.toJSDate());
-const checkOutInput = ref<Date>(props.checkIn.toJSDate());
-const today = useToday().toJSDate();
+const checkInInput = ref<DateTime>(props.checkIn);
+const checkOutInput = ref<DateTime>(props.checkOut);
+const today = useToday();
 
 const summary = ref<boolean>(false);
 
 const { smAndDown, mdAndUp } = useDisplay();
+const { summaryList, totalAmount, totalGuests } = useBookingSummary();
 
 onMounted(() => {
   // checkInInput.value = props.checkIn.toJSDate()!;
   // checkOutInput.value = props.checkOut.toJSDate()!;
 })
 
-function search() {
-  useRouter().push({ name: routeNames.book, query: { checkin: checkInInput, checkout: checkOutInput }})
+function searchBtn() {
+  useRouter().push({ name: routeNames.book, query: { checkin: checkInInput.value.toISODate(), checkout: checkOutInput.value.toISODate() }})
 }
 
-const { data, error, isPending, isError } = useQuery({
-  queryKey: ['search', props.checkIn.toISODate(), props.checkOut.toISODate() ],
-  queryFn: () => fetchSearch(props.checkIn, props.checkOut),
-});
+const searchResult = search(checkInInput.value, checkOutInput.value);
+const rooms = listRooms();
 
-async function fetchSearch(checkin: DateTime, checkout: DateTime) {
-  await sleep(2000);
-  return [
-    {
-        "roomId": "3a266b79-9e90-43a7-9ceb-338cbf8207cc",
-        "availableQuantity": 7,
-        "rates": [
-            {
-                "date": "2024-03-20",
-                "defaultPrice": 119.80,
-                "prices": [
-                    { "amount": 119.80, "guests": 2, "paymentMethod": "pix" },
-                    { "amount": 109.80, "guests": 1, "paymentMethod": "pix" },
-                ]
-            },
-            {
-                "date": "2024-03-21",
-                "defaultPrice": 129.80,
-                "prices": [
-                    { "amount": 129.80, "guests": 2, "paymentMethod": "pix" },
-                    { "amount": 119.80, "guests": 1, "paymentMethod": "pix" },
-                ]
-            }
-        ]
-    }
-  ];
+function roomFromRate(roomRates: RoomRates): Room {
+  const room = rooms.value.data?.find(room => room.id === roomRates.roomId);
+
+  if (!room) {
+    throw new Error('Room not found');
+  }
+
+  return room;
 }
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 </script>
 
 <style scoped>

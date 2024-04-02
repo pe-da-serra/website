@@ -4,7 +4,7 @@
       v-if="xs"
       cover
       height="175"
-      src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+      :src="room.photos[0]"
     />
 
     <v-row>
@@ -16,31 +16,30 @@
         <v-img
           cover
           height="220"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          :src="props.room.photos[0]"
           class="rounded"
         />
       </v-col>
       <v-col :class="{ 'pl-0': smAndUp }">
-        <v-card-title>Quarto solteiro</v-card-title>
+        <v-card-title>{{ props.room.name }}</v-card-title>
 
         <v-card-subtitle>
-          <span class="me-1">1 hóspede • 1 cama</span>
+          <span class="me-1">{{ subtitle }}</span>
         </v-card-subtitle>
 
-
         <v-card-text>
-          <p>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</p>
+          <p>{{ props.room.description }}</p>
         </v-card-text>
       </v-col>
     </v-row>
 
     <v-divider class="pb-3"/>
-    <p class="text-right font-weight-bold px-3">R$ 700</p>
-    <p class="text-right text-body-2 px-3">3 noites</p>
+    <p class="text-right font-weight-bold px-3">{{ price }} por noite</p>
+    <p class="text-right text-body-2 px-3">{{ nightsNumber }} noite{{ nightsNumber > 1 ? 's' : '' }}</p>
     <div class="d-flex align-end justify-end px-3 pb-3">
-      <NumberSelect v-model="totalGuests" :min=1 :max=3 label="Hóspedes"/>
-      <NumberSelect v-model="totalRooms" :min=1 :max=3 label="Quartos"/>
-      <v-btn color="secondary" variant="outlined" rounded class="ml-2">
+      <NumberSelect v-model="totalRooms" :min=1 :max="maximumRooms" label="Quartos" :disabled="maximumRooms < 1" />
+      <NumberSelect v-model="totalGuests" :min=1 :max="room.capacity" label="Hóspedes" :disabled="maximumRooms < 1" />
+      <v-btn @click="addRoom" color="secondary" variant="outlined" rounded class="ml-2" :disabled="maximumRooms < 1">
         Adicionar
       </v-btn>
     </div>
@@ -49,14 +48,68 @@
 
 <script setup lang="ts">
 import NumberSelect from '@/components/NumberSelect.vue';
+import { Room, RoomRates, PaymentMethod, selectRoom, booking } from '@/features/booking';
+import { DateTime } from 'luxon';
+import { computed } from 'vue';
 import { ref } from 'vue';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 
+const props = defineProps<{ room: Room, roomRates: RoomRates, checkin: DateTime, checkout: DateTime }>();
+
 const { xs, smAndUp } = useDisplay();
 
-const totalGuests = ref<number>(1);
+const totalGuests = ref<number>(props.room.capacity);
 const totalRooms = ref<number>(1);
 
+const subtitle = computed(() =>
+  `${props.room.capacity} hóspede${props.room.capacity > 1 ? 's' : ''} • ${props.room.beds} cama${props.room.beds > 1 ? 's' : '' }`
+);
+
+const nightsNumber = computed(() => props.checkout.diff(props.checkin, 'days').days);
+
+const price = computed(() => {
+  let price = props.roomRates.rates[0].prices.find(p => p.paymentMethod === paymentMethod)?.amount;
+  if (!price) {
+    price = props.roomRates.rates[0].defaultPrice;
+  }
+  return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+});
+
+const paymentMethod: PaymentMethod = 'pix';
+
+const pricePerRoom = computed(() =>
+  props.roomRates.rates.reduce((acc, rate) => {
+    let datePrice = rate.prices.find(p => p.paymentMethod === paymentMethod && p.guests === totalGuests.value)?.amount;
+    if (!datePrice) {
+      datePrice = rate.defaultPrice;
+    }
+
+    acc += datePrice;
+
+    return acc;
+  }, 0)
+);
+
+const maximumRooms = computed(() => {
+  const available = props.roomRates.availableQuantity;
+  const selected = booking.value.selectedRooms
+    .filter(r => r.roomId === props.room.id)
+    .reduce((acc, r) => acc + r.totalRooms, 0);
+
+  return available - selected;
+});
+
+const addRoom = () => {
+  selectRoom({
+    roomId: props.room.id,
+    guestsPerRoom: totalGuests.value,
+    totalRooms: totalRooms.value,
+    pricePerRoom: pricePerRoom.value,
+  });
+
+  totalGuests.value = props.room.capacity;
+  totalRooms.value = 1;
+};
 </script>
 
 <style scoped>
