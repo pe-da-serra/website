@@ -1,146 +1,108 @@
-import { useQuery } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import { DateTime } from "luxon";
-import { computed, ref } from "vue";
+import { Ref, computed, ref } from "vue";
+import { BookingPage, PaymentMethod, Person, Room, RoomRates, RoomTypeBooking } from "./booking.types";
+import { useToday } from "./date";
 
-export const bookingUrl = (options: BookingOptions = {}) => {
-  const phone = "552433847550";
+const today = useToday();
 
-  var text = "Olá, gostaria fazer uma reserva no *Pé da Serra Hotel*.\n";
+const checkin = ref<DateTime>();
+const checkout = ref<DateTime>();
+const page = ref<BookingPage>(BookingPage.Search);
+const mainGuest = ref<Person>({ name: '', email: '', phone: '', document: '' });
+const payer = ref<Person>({ name: '', email: '', phone: '', document: '' });
+const selectedRooms = ref<RoomTypeBooking[]>([]);
+const paymentMethod = ref<PaymentMethod>('pix');
+const paymentData = ref({});
 
-  if (options.start && options.end) {
-    text += `\n*Chegada:* ${options.start.toLocaleDateString()}\n*Saída:* ${options.end.toLocaleDateString()}`;
+export function useBooking() {
+  const rooms = useRooms();
+
+  const summaryList = computed(() => {
+    if (!rooms.value.data) return [];
+
+    return selectedRooms.value.map(room => ({
+      roomId: room.roomId,
+      name: rooms.value.data?.find(r => r.id === room.roomId)?.name ?? '',
+      quantity: room.totalRooms,
+      guestsPerRoom: room.guestsPerRoom,
+      amount: room.pricePerRoom * room.totalRooms,
+    }))
+  });
+
+  const totalAmount = computed(() =>
+    summaryList.value.reduce((acc, listItem) => acc + listItem.amount, 0)
+  );
+
+  const totalGuests = computed(() =>
+    summaryList.value.reduce((acc, listItem) => acc + (listItem.guestsPerRoom * listItem.quantity), 0)
+  );
+
+  function selectRoom(room: RoomTypeBooking, checkinDate: DateTime, checkoutDate: DateTime) {
+    checkin.value = checkinDate;
+    checkout.value = checkoutDate;
+
+    const index = selectedRooms.value.findIndex(r => r.roomId === room.roomId && r.guestsPerRoom === room.guestsPerRoom);
+    if (index >= 0) {
+      selectedRooms.value[index].totalRooms += room.totalRooms;
+      return;
+    }
+
+    selectedRooms.value.push(room);
   }
 
-  if (options.room) {
-    text += `\n*Quarto:* ${transalateRoomType(options.room)}`;
+  function removeRoom(roomId: string, guestsPerRoom: number) {
+    // remove room from selectedRooms
+    const index = selectedRooms.value.findIndex(r => r.roomId === roomId && r.guestsPerRoom === guestsPerRoom);
+    if (index >= 0) {
+      selectedRooms.value.splice(index, 1);
+    }
+
+    if (selectedRooms.value.length === 0) {
+      checkin.value = undefined;
+      checkout.value = undefined;
+    }
   }
 
-  if (options.guests) {
-    text += `\n*Hóspedes:* ${options.guests}`;
+  function clearRooms() {
+    if (selectedRooms.value.length > 0) {
+      checkin.value = undefined;
+      checkout.value = undefined;
+      selectedRooms.value = [];
+    }
   }
 
-  return encodeURI(`https://api.whatsapp.com/send?phone=${phone}&text=${text}`);
-}
-
-type BookingOptions = {
-  start?: Date;
-  end?: Date;
-  room?: RoomType;
-  guests?: number;
-}
-
-export enum RoomType {
-  Single = 'single',
-  Double = 'double',
-  DoubleSharedBathroom = 'double-shared-bathroom',
-  Couple = 'couple',
-  Triple = 'triple',
-  Apartment = 'apartment',
-}
-
-const transalateRoomType = (room: RoomType) => {
-  switch (room) {
-    case RoomType.Single:
-      return "Solteiro";
-    case RoomType.Double:
-      return "Duplo";
-    case RoomType.DoubleSharedBathroom:
-      return "Duplo - banheiro compartilhado";
-    case RoomType.Couple:
-      return "Casal";
-    case RoomType.Triple:
-      return "Triplo";
-    case RoomType.Apartment:
-      return "Apartamento";
+  return {
+    page,
+    mainGuest,
+    payer,
+    selectedRooms,
+    paymentMethod,
+    summaryList,
+    totalAmount,
+    totalGuests,
+    checkin,
+    checkout,
+    paymentData,
+    // methods
+    selectRoom,
+    removeRoom,
+    clearRooms,
   }
-}
-
-export const booking = ref<{
-  page: 'search' | 'guestForm' | 'paymentForm' | 'pixForm',
-  mainGuest: {
-    name: string,
-    email: string,
-    phone: string,
-    document: string,
-  },
-  payer: {
-    name: string,
-    email: string,
-    phone: string,
-    document: string,
-  },
-  paymentMethod: PaymentMethod,
-  selectedRooms: RoomTypeBooking[],
-}>({
-  page: "search",
-  mainGuest: { name: "", email: "", phone: "", document: "" },
-  payer: { name: "", email: "", phone: "", document: "" },
-  paymentMethod: 'pix',
-  selectedRooms: [],
-});
-
-export const selectRoom = (room: RoomTypeBooking) => {
-  // add room to selectedRooms. if the roomId is already in the list with the same number of guests, increment the totalRooms
-  const index = booking.value.selectedRooms.findIndex(r => r.roomId === room.roomId && r.guestsPerRoom === room.guestsPerRoom);
-  if (index >= 0) {
-    booking.value.selectedRooms[index].totalRooms += room.totalRooms;
-  } else {
-    booking.value.selectedRooms.push(room);
-  }
-}
-
-export const removeRoom = (roomId: string, guestsPerRoom: number) => {
-  // remove room from selectedRooms
-  const index = booking.value.selectedRooms.findIndex(r => r.roomId === roomId && r.guestsPerRoom === guestsPerRoom);
-  if (index >= 0) {
-    booking.value.selectedRooms.splice(index, 1);
-  }
-}
-
-export type PaymentMethod = 'pix';
-
-export type Room = {
-  id: string,
-  name: string,
-  description: string,
-  capacity: number,
-  beds: number,
-  photos: string[],
-}
-
-export type RoomRates = {
-  roomId: string,
-  availableQuantity: number,
-  checkin: string,
-  checkout: string,
-  rates: {
-    date: string,
-    defaultPrice: number,
-    prices: {
-      amount: number,
-      guests: number,
-      paymentMethod: string,
-    }[],
-  }[],
 };
 
-export type RoomTypeBooking = {
-  roomId: string,
-  guestsPerRoom: number,
-  totalRooms: number,
-  pricePerRoom: number,
-}
-
-export const search = (checkin: DateTime, checkout: DateTime) => {
-  return ref(useQuery({
-    queryKey: ['search', checkin.toISODate(), checkout.toISODate()],
+export const useSearch = (checkin: Ref<DateTime>, checkout: Ref<DateTime>) => {
+  const result = ref(useQuery({
+    queryKey: ['search', checkin, checkout],
     queryFn: async () => {
-      return fetchSearch(checkin, checkout);
+      return fetchSearch(checkin.value, checkout.value);
     }
   }));
+
+  return result;
 }
 
-export const listRooms = () => {
+export const useRooms = () => {
   return ref(useQuery({
     queryKey: ['rooms'],
     queryFn: async () => {
@@ -149,7 +111,29 @@ export const listRooms = () => {
   }));
 }
 
+export const preBook = () => {
+  return ref(useMutation({
+    mutationFn: preBookMock,
+    onSuccess: (data) => {
+      paymentData.value = data.additionalInformation;
+    }
+  }));
+}
+
+const preBookMock = async () => {
+  await sleep(1000);
+  return {
+    bookingId: "b8beef9f-6de3-4270-9ddf-ec7e4e21f2b8",
+    paymentMethod: "pix",
+    additionalInformation: {
+      expiration: DateTime.now().plus( { minutes: 10 }).toISO(),
+      pixCode: '00020101021226820014br.gov.bcb.pix2560pix.stone.com.br/pix/v2/3c63d4a3-ab96-4571-a1a3-6f6c931e7ee7520400005303986540527.205802BR5914Conta primaria6014RIO DE JANEIRO62290525pacluap9wq1fzlh1fk3gkpy5363043797',
+    }
+  }
+}
+
 const fetchSearch = async (checkin: DateTime, checkout: DateTime): Promise<RoomRates[]> => {
+  console.log('fetch search', checkin.toISODate(), checkout.toISODate());
   await sleep(2000);
   return [
     {
@@ -204,7 +188,7 @@ const fetchSearch = async (checkin: DateTime, checkout: DateTime): Promise<RoomR
 }
 
 const fetchRooms = async (): Promise<Room[]> => {
-  await sleep(2000);
+  await sleep(100);
   return [
     {
         "id": "3a266b79-9e90-43a7-9ceb-338cbf8207cc",

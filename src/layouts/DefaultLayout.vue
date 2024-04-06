@@ -1,23 +1,28 @@
 <template>
     <v-app id="inspire">
-    <v-app-bar scroll-behavior="elevate">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
+    <v-app-bar scroll-behavior="elevate" elevation="4">
+      <template v-slot:prepend>
+        <v-app-bar-nav-icon @click="drawer = !drawer" />
+      </template>
 
       <v-app-bar-title class="text-center">
         <router-link :to="{ name: routeNames.home }">
           <img src="@/assets/logo.svg"
-            style="max-height: 55px; margin-top: 5px;"
-            class=""
+            style="max-height: 60px;"
+            class="py-1"
             contain
             alt="Pé da Serra Hotel"
           />
         </router-link>
       </v-app-bar-title>
 
+      <template v-slot:append>
+        <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
+        <v-btn disabled></v-btn>
+      </template>
+
       <!-- <v-btn v-if="!mobile" variant="outlined">Reservar</v-btn> -->
       <!-- <v-btn icon="mdi-translate" /> -->
-      <v-btn disabled></v-btn>
     </v-app-bar>
 
     <app-navigation-drawer v-model="drawer" />
@@ -32,11 +37,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useDisplay } from 'vuetify';
 import AppFooter from '@/components/AppFooter.vue';
 import AppNavigationDrawer from '@/components/AppNavigationDrawer.vue';
 import { routeNames } from '@/router';
 
 const drawer = ref(false);
-const { mobile } = useDisplay();
 </script>

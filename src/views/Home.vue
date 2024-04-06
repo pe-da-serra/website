@@ -11,17 +11,16 @@
       :key="img"
       :src="img"
       :lazy-src="lazyImg"
-      height="100%"
       alt="Homepage banner"
       cover
     />
   </v-carousel>
   <v-row justify="center">
-    <v-col md="8" xl="6" class="px-8 px-sm-0">
-      <v-card class="mx-16 pa-5" style="margin-top: -3rem;">
+    <v-col md="7" lg="5" class="px-8 px-sm-0">
+      <v-card class="mx-16 pa-5" style="margin-top: -5.5rem;">
         <v-form>
           <v-row>
-            <v-col cols="10" sm="4">
+            <!-- <v-col cols="10" sm="4">
               <NumberInput
                 v-model="guests"
                 label="Hóspedes"
@@ -29,23 +28,23 @@
                 variant="outlined"
                 hide-details
               />
-            </v-col>
-            <v-col cols="12" sm="4">
+            </v-col> -->
+            <v-col cols="12" sm="6">
               <DateInput
                 :model-value="startDate"
                 @update:model-value="updateStartDate"
                 :min-date="today"
-                label="Checkin"
+                label="Entrada"
                 variant="outlined"
                 prepend-icon="mdi-calendar-start-outline"
               />
             </v-col>
-            <v-col cols="12" sm="4">
+            <v-col cols="12" sm="6">
               <DateInput
                 :model-value="endDate"
                 @update:model-value="updateEndDate"
-                :min-date="today"
-                label="Checkout"
+                :min-date="addDays(today, 1)"
+                label="Saída"
                 variant="outlined"
                 prepend-icon="mdi-calendar-end-outline"
               />
@@ -59,7 +58,7 @@
             color="primary"
             text="Reservar"
             size="large"
-            :to="'/reserva'"
+            :to="`/reserva?checkin=${startDate.toISODate()}&checkout=${endDate.toISODate()}`"
           />
         </v-card-actions>
       </v-card>
@@ -98,24 +97,22 @@ const images = [ img3, img4, img5 ];
 import { ref, computed } from 'vue';
 import NumberInput from '@/components/NumberInput.vue'
 import DateInput from '@/components/DateInput.vue';
-import { bookingUrl } from '@/features/booking';
+import { useToday, addDays } from '@/features/date';
+import { DateTime } from 'luxon';
 
 const guests = ref(2);
-const startDate = ref(new Date);
-const endDate = ref(new Date);
+const today = useToday();
 
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-startDate.value.setDate(startDate.value.getDate() + 1);
-endDate.value.setDate(endDate.value.getDate() + 3);
+const startDate = ref<DateTime>(addDays(today, 1));
+const endDate = ref<DateTime>(addDays(today, 2));
 
-function updateStartDate(date: Date): void {
-  if (date > endDate.value) endDate.value = date;
+function updateStartDate(date: DateTime): void {
+  if (date >= endDate.value) endDate.value = addDays(date, 1);
   startDate.value = date;
 }
 
-function updateEndDate(date: Date): void {
-  if (date < startDate.value) startDate.value = date;
+function updateEndDate(date: DateTime): void {
+  if (date <= startDate.value) startDate.value = addDays(date, -1);
   endDate.value = date;
 }
 </script>

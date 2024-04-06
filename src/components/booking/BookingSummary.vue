@@ -19,11 +19,11 @@
     <v-divider v-if="model" class="mb-1" />
     <div class="py-4">
       <p class="text-center">
-        14/03/2024
+        {{ toString(checkin) }}
         <v-icon size="small" start end>
           mdi-arrow-right
         </v-icon>
-        17/03/2024
+        {{ toString(checkout) }}
       </p>
       <p class="text-center pt-2">{{ totalGuests }} hóspede{{ totalGuests !== 1 ? 's' : '' }}</p>
     </div>
@@ -69,7 +69,7 @@
         rounded
         size="large"
         text="Reservar agora"
-        @click="booking.page = 'guestForm'"
+        @click="nextPage"
       />
       <p class="text-center text-body-2 text-medium-emphasis pt-3 pb-1">
         <v-icon size="small">mdi-shield-check-outline</v-icon>
@@ -81,8 +81,9 @@
 
 <script setup lang="ts">
 import { defineModel } from 'vue';
-import { booking, removeRoom } from '@/features/booking';
-import { useBookingSummary } from '@/features/booking-summary';
+import { useBooking } from '@/features/booking';
+import { BookingPage } from '@/features/booking.types';
+import { toString } from '@/features/date';
 import { toMoney } from '@/features/money';
 
 const props = defineProps<{
@@ -91,6 +92,11 @@ const props = defineProps<{
 
 const model = defineModel<boolean>({ required: true });
 
-const { summaryList, totalAmount, totalGuests } = useBookingSummary();
+const { page, removeRoom, summaryList, totalAmount, totalGuests, checkin, checkout } = useBooking();
+
+const nextPage = () => {
+  page.value = BookingPage.GuestForm;
+  model.value = false;
+}
 
 </script>

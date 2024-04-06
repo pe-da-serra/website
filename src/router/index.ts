@@ -1,9 +1,7 @@
 // Composables
 import { fromIsoDate, useToday } from '@/features/date';
 import { BookProps } from '@/views/Book.vue';
-import { format, formatISO } from 'date-fns';
-import { DateTime } from 'luxon';
-import { RouteLocation, RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
 export const routeNames = {
   home: 'Home',
@@ -40,7 +38,7 @@ const parseBookRoute = (route: RouteLocationNormalized): BookProps => {
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/layouts/Default.vue'),
+    component: () => import('@/layouts/DefaultLayout.vue'),
     children: [
       {
         path: '',
@@ -69,25 +67,6 @@ export const routes: RouteRecordRaw[] = [
         path: 'contato',
         name: routeNames.contact,
         component: () => import(/* webpackChunkName: "contact" */ '@/views/Contact.vue'),
-      },
-      {
-        path: 'reserva',
-        name: routeNames.book,
-        component: () => import('@/views/Book.vue'),
-        props: parseBookRoute,
-        beforeEnter: (to, from, next) => {
-          const today = useToday();
-
-          if (!fromIsoDate(to.query.checkin as string).isValid ||
-           !fromIsoDate(to.query.checkout as string).isValid) {
-            to.query.checkin = today.toISODate();
-            to.query.checkout = today.plus({ days: 1 }).toISODate();
-            next(to);
-          }
-
-          next();
-          return true;
-        }
       },
       {
         path: 'quartos/solteiro',
@@ -121,7 +100,33 @@ export const routes: RouteRecordRaw[] = [
       },
     ],
   },
-]
+  {
+    path: '/reserva',
+    component: () => import('@/layouts/BookLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: routeNames.book,
+        component: () => import('@/views/Book.vue'),
+        props: parseBookRoute,
+        beforeEnter: (to, from, next) => {
+          const today = useToday();
+
+          if (!fromIsoDate(to.query.checkin as string).isValid ||
+           !fromIsoDate(to.query.checkout as string).isValid) {
+            console.error('Invalid book query params')
+            to.query.checkin = today.toISODate();
+            to.query.checkout = today.plus({ days: 1 }).toISODate();
+            next(to);
+          }
+
+          next();
+          return true;
+        }
+      },
+    ],
+  },
+];
 
 export const routerOptions = {
   routes,

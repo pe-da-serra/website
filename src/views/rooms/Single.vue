@@ -83,5 +83,5 @@ import img5 from "@/assets/single-5.jpg";
 
 const images = [img1, img2, img3, img4, img5];
 
-import { bookingUrl, RoomType } from '@/features/booking';
+import { bookingUrl, RoomType } from '@/features/booking.old';
 </script>

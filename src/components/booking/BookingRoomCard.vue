@@ -48,13 +48,14 @@
 
 <script setup lang="ts">
 import NumberSelect from '@/components/NumberSelect.vue';
-import { Room, RoomRates, PaymentMethod, selectRoom, booking } from '@/features/booking';
+import { useBooking } from '@/features/booking';
+import { Room, RoomRates } from '@/features/booking.types';
 import { DateTime } from 'luxon';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 
-const props = defineProps<{ room: Room, roomRates: RoomRates, checkin: DateTime, checkout: DateTime }>();
+const props = defineProps<{room: Room, roomRates: RoomRates, checkin: DateTime, checkout: DateTime }>();
 
 const { xs, smAndUp } = useDisplay();
 
@@ -68,18 +69,16 @@ const subtitle = computed(() =>
 const nightsNumber = computed(() => props.checkout.diff(props.checkin, 'days').days);
 
 const price = computed(() => {
-  let price = props.roomRates.rates[0].prices.find(p => p.paymentMethod === paymentMethod)?.amount;
+  let price = props.roomRates.rates[0].prices.find(p => p.paymentMethod === booking.paymentMethod.value)?.amount;
   if (!price) {
     price = props.roomRates.rates[0].defaultPrice;
   }
   return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 });
 
-const paymentMethod: PaymentMethod = 'pix';
-
 const pricePerRoom = computed(() =>
   props.roomRates.rates.reduce((acc, rate) => {
-    let datePrice = rate.prices.find(p => p.paymentMethod === paymentMethod && p.guests === totalGuests.value)?.amount;
+    let datePrice = rate.prices.find(p => p.paymentMethod === booking.paymentMethod.value && p.guests === totalGuests.value)?.amount;
     if (!datePrice) {
       datePrice = rate.defaultPrice;
     }
@@ -90,9 +89,11 @@ const pricePerRoom = computed(() =>
   }, 0)
 );
 
+const booking = useBooking();
+
 const maximumRooms = computed(() => {
   const available = props.roomRates.availableQuantity;
-  const selected = booking.value.selectedRooms
+  const selected = booking.selectedRooms.value
     .filter(r => r.roomId === props.room.id)
     .reduce((acc, r) => acc + r.totalRooms, 0);
 
@@ -100,12 +101,12 @@ const maximumRooms = computed(() => {
 });
 
 const addRoom = () => {
-  selectRoom({
+  booking.selectRoom({
     roomId: props.room.id,
     guestsPerRoom: totalGuests.value,
     totalRooms: totalRooms.value,
     pricePerRoom: pricePerRoom.value,
-  });
+  }, props.checkin, props.checkout);
 
   totalGuests.value = props.room.capacity;
   totalRooms.value = 1;

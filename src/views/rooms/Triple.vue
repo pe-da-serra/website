@@ -78,7 +78,7 @@ import RoomFeature from '@/components/RoomFeature.vue';
 import img1 from "@/assets/example/img-1.jpg";
 import img2 from "@/assets/example/img-2.jpg";
 import img3 from "@/assets/example/img-3.jpg";
-import { RoomType, bookingUrl } from '@/features/booking';
+import { RoomType, bookingUrl } from '@/features/booking.old';
 
 const images = [img1, img2, img3, img1, img2];
 </script>

@@ -117,7 +117,7 @@ useHead({
 import { lazyImg } from '@/features/image';
 import hotel1 from '@/assets/hotel-1.jpg';
 import hotel2 from '@/assets/hotel-2.jpg';
-import { bookingUrl } from '@/features/booking';
+import { bookingUrl } from '@/features/booking.old';
 
 const images = [ hotel1, hotel2 ];
 

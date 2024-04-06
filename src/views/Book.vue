@@ -1,6 +1,6 @@
 <template>
-  <v-row class="py-3 bg-white" justify="center" no-gutters>
-    <v-col cols="4">
+  <!-- <v-row class="py-3 bg-white" justify="center" no-gutters>
+    <v-col cols="4 px-1">
       <DateInput
         v-model="checkInInput"
         :min-date="today"
@@ -18,29 +18,50 @@
         density="compact"
       />
     </v-col>
-    <v-col cols="2">
+    <v-col cols="2 px-1">
       <v-btn @click="searchBtn"><v-icon>mdi-magnify</v-icon></v-btn>
     </v-col>
-  </v-row>
+  </v-row> -->
 
-  <v-row justify="center">
+  <v-row v-if="isLoading" justify="center" class="h-screen">
+    <v-col md="10" xl="7" class="mx-4 d-flex h-100">
+      <v-row
+        align-content="center"
+        class="fill-height"
+        justify="center"
+      >
+        <v-col cols="6">
+          <v-progress-linear
+            color="primary"
+            height="6"
+            indeterminate
+            rounded
+          ></v-progress-linear>
+        </v-col>
+        <v-col
+          class="text-subtitle-1 text-center"
+          cols="12"
+        >
+          Carregando...
+        </v-col>
+      </v-row>
+    </v-col>
+  </v-row>
+  <v-row justify="center" class="py-4" v-else>
     <v-col md="10" xl="7" class="mx-4 d-flex h-100">
       <v-row>
         <v-col cols="12" md="8">
-          <div v-if="booking.page == 'guestForm'">
+          <div v-if="page == BookingPage.GuestForm">
             <BookingGuestForm />
           </div>
-          <div v-else-if="booking.page == 'paymentForm'">
+          <div v-else-if="page == BookingPage.PaymentForm">
             <BookingPaymentForm />
           </div>
-          <div v-else-if="booking.page == 'pixForm'">
+          <div v-else-if="page == BookingPage.PixForm">
             <BookingPixForm />
           </div>
           <div v-else>
-            <div v-if="searchResult.isPending || rooms.isPending">
-              Loading...
-            </div>
-            <div v-else-if="searchResult.isError || rooms.isError">
+            <div v-if="searchResult.isError || rooms.isError">
               Error!
               <pre>{{ searchResult.error }}</pre>
               <pre>{{ rooms.error }}</pre>
@@ -58,7 +79,7 @@
           </div>
         </v-col>
         <v-col v-if="mdAndUp" cols="12" md="4" class="sticky">
-          <v-card class="w-100" v-if="booking.selectedRooms.length > 0">
+          <v-card class="w-100" v-if="selectedRooms.length > 0">
             <BookingSummary
               v-model="summary"
               :is-mobile="false"
@@ -69,7 +90,11 @@
     </v-col>
   </v-row>
 
-  <v-dialog v-model="summary" fullscreen transition="dialog-bottom-transition">
+  <v-dialog
+    v-model="summary"
+    fullscreen
+    transition="dialog-bottom-transition"
+  >
     <BookingSummary
       v-model="summary"
       is-mobile
@@ -77,7 +102,7 @@
   </v-dialog>
 
   <v-app-bar
-    v-if="smAndDown && booking.selectedRooms.length > 0"
+    v-if="smAndDown && selectedRooms.length > 0"
     location="bottom"
     height="110"
     class="rounded-t-xl pa-0 ma-0"
@@ -87,13 +112,13 @@
       <div class="w-100 d-flex align-center px-4 justify-space-between">
         <div>
           <p class="text-h6 font-weight-bold">{{ toMoney(totalAmount) }}</p>
-          <p>28 mar - 31 mar</p>
+          <p>{{ toShortString(checkin) }} - {{ toShortString(checkout) }}</p>
         </div>
         <v-btn
           color="primary"
           variant="flat"
           rounded size="large"
-          @click="booking.page='guestForm'"
+          @click="page = BookingPage.GuestForm"
         >Reservar</v-btn>
       </div>
     </div>
@@ -101,22 +126,18 @@
 </template>
 
 <script setup lang="ts">
-import DateInput from '@/components/DateInput.vue';
 import BookingGuestForm from '@/components/booking/BookingGuestForm.vue';
 import BookingPaymentForm from '@/components/booking/BookingPaymentForm.vue';
 import BookingPixForm from '@/components/booking/BookingPixForm.vue';
 import BookingSummary from '@/components/booking/BookingSummary.vue';
 import BookingRoomCard from '@/components/booking/BookingRoomCard.vue';
-import { useToday } from '@/features/date';
-import { Room, RoomRates, booking, search } from '@/features/booking';
-import { useBookingSummary } from '@/features/booking-summary';
+import { useBooking, useSearch, useRooms } from '@/features/booking';
+import { Room, RoomRates, BookingPage } from '@/features/booking.types';
 import { toMoney } from '@/features/money';
-import { routeNames } from '@/router';
+import { toShortString } from '@/features/date';
 import { DateTime } from 'luxon';
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useDisplay } from 'vuetify/lib/framework.mjs';
-import { listRooms } from '@/features/booking';
+import { ref, toRef, watchEffect, computed } from 'vue';
+import { useDisplay } from 'vuetify';
 
 export type BookProps = {
   checkIn: DateTime,
@@ -124,26 +145,22 @@ export type BookProps = {
 };
 const props = defineProps<BookProps>();
 
-const checkInInput = ref<DateTime>(props.checkIn);
-const checkOutInput = ref<DateTime>(props.checkOut);
-const today = useToday();
-
 const summary = ref<boolean>(false);
 
 const { smAndDown, mdAndUp } = useDisplay();
-const { summaryList, totalAmount, totalGuests } = useBookingSummary();
 
-onMounted(() => {
-  // checkInInput.value = props.checkIn.toJSDate()!;
-  // checkOutInput.value = props.checkOut.toJSDate()!;
-})
+const { page, selectedRooms, totalAmount, checkin, checkout } = useBooking();
 
-function searchBtn() {
-  useRouter().push({ name: routeNames.book, query: { checkin: checkInInput.value.toISODate(), checkout: checkOutInput.value.toISODate() }})
-}
+watchEffect(() => {
+  if (selectedRooms.value.length === 0) {
+    summary.value = false;
+    return;
+  }
+});
 
-const searchResult = search(checkInInput.value, checkOutInput.value);
-const rooms = listRooms();
+const searchResult = useSearch(toRef(() => props.checkIn), toRef(() => props.checkOut));
+const rooms = useRooms();
+const isLoading = computed(() => searchResult.value.isPending || rooms.value.isPending);
 
 function roomFromRate(roomRates: RoomRates): Room {
   const room = rooms.value.data?.find(room => room.id === roomRates.roomId);

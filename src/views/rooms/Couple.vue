@@ -80,7 +80,7 @@ import img2 from "@/assets/couple-2.jpg";
 import img3 from "@/assets/couple-3.jpg";
 import img4 from "@/assets/couple-4.jpg";
 import img5 from "@/assets/couple-5.jpg";
-import { RoomType, bookingUrl } from '@/features/booking';
+import { RoomType, bookingUrl } from '@/features/booking.old';
 
 const images = [img1, img2, img3, img4, img5];
 </script>
