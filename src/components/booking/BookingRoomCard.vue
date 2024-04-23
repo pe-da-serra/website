@@ -37,8 +37,8 @@
     <p class="text-right font-weight-bold px-3">{{ price }} por noite</p>
     <p class="text-right text-body-2 px-3">{{ nightsNumber }} noite{{ nightsNumber > 1 ? 's' : '' }}</p>
     <div class="d-flex align-end justify-end px-3 pb-3">
-      <NumberSelect v-model="totalRooms" :min=1 :max="maximumRooms" label="Quartos" :disabled="maximumRooms < 1" />
       <NumberSelect v-model="totalGuests" :min=1 :max="room.capacity" label="Hóspedes" :disabled="maximumRooms < 1" />
+      <NumberSelect v-model="totalRooms" :min=1 :max="maximumRooms" label="Quartos" :disabled="maximumRooms < 1" />
       <v-btn @click="addRoom" color="secondary" variant="outlined" rounded class="ml-2" :disabled="maximumRooms < 1">
         Adicionar
       </v-btn>
