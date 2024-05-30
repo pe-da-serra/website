@@ -31,8 +31,9 @@
     <v-divider class="mb-1" />
 
     <div class="overflow-y-auto">
-      <div v-for="item in summaryList" class="pa-4 d-flex w-100">
+      <div v-for="(item, i) in summaryList" :key="i" class="pa-4 d-flex w-100">
         <v-btn
+          v-if="page === BookingPage.Search"
           size="small"
           color="red"
           variant="text"

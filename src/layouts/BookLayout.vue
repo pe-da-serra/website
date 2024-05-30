@@ -104,6 +104,7 @@ import { DateTime } from 'luxon';
 import { addDays, useToday } from '@/features/date';
 import { useRoute, useRouter } from 'vue-router';
 import { useBooking } from '@/features/booking';
+import { BookingPage } from '@/features/booking.types';
 
 const drawer = ref(false);
 const confirmDialog = ref(false);
@@ -113,7 +114,7 @@ const { smAndUp } = useDisplay();
 const route = useRoute();
 const router = useRouter();
 
-const { selectedRooms, clearRooms } = useBooking();
+const { page, selectedRooms, clearRooms } = useBooking();
 
 const checkinInput = ref<DateTime>(DateTime.fromISO(route.query.checkin as string));
 const checkoutInput = ref<DateTime>(DateTime.fromISO(route.query.checkout as string));
@@ -149,10 +150,12 @@ function doSearch() {
   const checkoutChanged = route.query.checkout !== checkoutInput.value.toISODate();
   const datesChanged = checkinChanged || checkoutChanged;
   if (!datesChanged) {
+    page.value = BookingPage.Search;
     return;
   }
 
   clearRooms();
+  page.value = BookingPage.Search;
   router.push(`/reserva?checkin=${checkinInput.value.toISODate()}&checkout=${checkoutInput.value.toISODate()}`);
 }
 </script>

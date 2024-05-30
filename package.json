@@ -1,7 +1,6 @@
 {
   "name": "pe-da-serra",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
@@ -14,6 +13,7 @@
     "@tanstack/vue-query": "^5.28.9",
     "@vueuse/core": "^10.9.0",
     "@vueuse/head": "^2.0.0",
+    "axios": "^1.6.8",
     "luxon": "^3.4.4",
     "maska": "^2.1.11",
     "qrcode": "^1.5.3",

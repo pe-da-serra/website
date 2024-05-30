@@ -1,7 +1,7 @@
 export const bookingUrl = (options: BookingOptions = {}) => {
   const phone = "552433847550";
 
-  var text = "Olá, gostaria fazer uma reserva no *Pé da Serra Hotel*.\n";
+  let text = "Olá, gostaria fazer uma reserva no *Pé da Serra Hotel*.\n";
 
   if (options.start && options.end) {
     text += `\n*Chegada:* ${options.start.toLocaleDateString()}\n*Saída:* ${options.end.toLocaleDateString()}`;

@@ -12,7 +12,7 @@
         <v-row>
           <v-col cols="12" md="6" class="pb-0">
             <v-text-field
-              v-model="booking.mainGuest.value.name"
+              v-model="booking.mainGuest.value.fullName"
               variant="outlined"
               label="Nome completo"
               placeholder="João da Silva"
@@ -80,6 +80,7 @@ async function nextStep(event: SubmitEventPromise) {
     return;
   }
 
+  booking.payer.value = { ...booking.mainGuest.value };
   booking.page.value = BookingPage.PaymentForm;
 }
 

@@ -61,14 +61,15 @@
             <BookingPixForm />
           </div>
           <div v-else>
-            <div v-if="searchResult.isError || rooms.isError">
+            <div v-if="searchHasError || roomsHasError">
               Error!
-              <pre>{{ searchResult.error }}</pre>
-              <pre>{{ rooms.error }}</pre>
+              <pre>{{ searchError }}</pre>
+              <pre>{{ roomsError }}</pre>
             </div>
             <div v-else>
               <BookingRoomCard
-                v-for="roomRates in searchResult.data"
+                v-for="roomRates in searchResult"
+                :key="roomRates.roomId"
                 :room-rates="roomRates"
                 :room="roomFromRate(roomRates)"
                 :checkin="props.checkIn"
@@ -158,12 +159,12 @@ watchEffect(() => {
   }
 });
 
-const searchResult = useSearch(toRef(() => props.checkIn), toRef(() => props.checkOut));
-const rooms = useRooms();
-const isLoading = computed(() => searchResult.value.isPending || rooms.value.isPending);
+const { searchResult, searchError, isLoadingSearch, searchHasError } = useSearch(toRef(() => props.checkIn), toRef(() => props.checkOut));
+const { rooms, roomsError, isLoadingRooms, roomsHasError } = useRooms();
+const isLoading = computed(() => isLoadingSearch.value || isLoadingRooms.value);
 
 function roomFromRate(roomRates: RoomRates): Room {
-  const room = rooms.value.data?.find(room => room.id === roomRates.roomId);
+  const room = rooms.value?.find(room => room.id === roomRates.roomId);
 
   if (!room) {
     throw new Error('Room not found');

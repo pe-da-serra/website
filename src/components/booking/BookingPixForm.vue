@@ -3,6 +3,7 @@
     <v-card-item>
       <v-card-title>
         <div class="d-flex">
+          <!-- Pix Logo -->
           <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="20">
             <defs/>
             <g fill="#4BB8A9" fill-rule="evenodd">
@@ -14,25 +15,32 @@
         </div>
       </v-card-title>
     </v-card-item>
-    <v-card-text>
+    <v-card-text v-if="isLoadingPayment">
+      Carregando...
+    </v-card-text>
+    <v-card-text v-else-if="payment?.status === 'Requested'">
       <div class="d-flex flex-column align-center">
         <span>Tempo restante</span>
         <span style="font-family: monospace;">{{ remainingTime.toFormat(`mm':'ss'`) }}</span>
-      <QrCode :value="pixValue" />
-      <v-text-field
-        :model-value="pixValue"
-        variant="outlined"
-        density="comfortable"
-        hide-details
-        readonly
-        class="w-50"
-      />
-      <v-btn
-        @click="copy"
-        class="text-none mt-2"
-        text="Copiar código Pix"
-      />
-    </div>
+        <QrCode :value="pixCode" />
+        <v-text-field
+          :model-value="pixCode"
+          variant="outlined"
+          density="comfortable"
+          hide-details
+          readonly
+          class="w-50"
+        />
+        <v-btn
+          @click="copy"
+          class="text-none mt-2"
+          text="Copiar código Pix"
+        />
+      </div>
+    </v-card-text>
+    <v-card-text v-else-if="payment?.status === 'Paid'">
+      <p>Pagamento efetuado!</p>
+      <p>Você receberá em instates um email com a confirmação da reserva.</p>
     </v-card-text>
   </v-card>
 </template>
@@ -40,25 +48,36 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import QrCode from './QrCode.vue';
-import { useBooking } from '@/features/booking';
+import { useBooking, usePayment } from '@/features/booking';
 import { DateTime, Duration } from 'luxon';
 import { fromIsoDate } from '@/features/date';
 import { ref } from 'vue';
+import { onUnmounted } from 'vue';
 
 const booking = useBooking();
-const pixValue = computed(() => booking.paymentData.value.pixCode);
+const { payment, isLoadingPayment, isFetchingPayment, refetchPayment } = usePayment(booking.paymentId);
+
+const pixCode = computed(() => payment.value?.additionalInformation?.pixCode!);
+const expiration = computed(() => fromIsoDate(payment.value?.additionalInformation?.expiration!));
 
 const remainingTime = ref<Duration>(Duration.fromMillis(0));
-const expiration = fromIsoDate(booking.paymentData.value.expiration);
-
-const timer = setInterval(() => {
+const expirationTimer = setInterval(() => {
   const now = DateTime.now();
-  remainingTime.value = expiration.diff(now);
+  remainingTime.value = expiration.value.diff(now);
   if (remainingTime.value <= Duration.fromMillis(0)) {
-    clearInterval(timer);
+    clearInterval(expirationTimer);
     remainingTime.value = Duration.fromMillis(0);
   }
 }, 1000);
+
+const refetchTimer = setInterval(() => {
+  if (payment.value?.status === 'Paid') {
+    clearInterval(refetchTimer);
+    return;
+  }
+
+  refetchPayment();
+}, 10_000);
 
 // const remainingTime = computed(() => {
 //   const expiration = fromIsoDate(booking.paymentData.value.expiration);
@@ -72,6 +91,12 @@ const timer = setInterval(() => {
 // });
 
 async function copy() {
-  await navigator.clipboard.writeText(pixValue.value);
+  navigator.clipboard.write
+  await navigator.clipboard.writeText(pixCode.value);
 }
+
+onUnmounted(() => {
+  clearInterval(expirationTimer);
+  clearInterval(refetchTimer);
+});
 </script>

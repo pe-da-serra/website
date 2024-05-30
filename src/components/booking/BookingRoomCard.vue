@@ -4,7 +4,7 @@
       v-if="xs"
       cover
       height="175"
-      :src="room.photos[0]"
+      src="https://via.placeholder.com/300x200"
     />
 
     <v-row>
@@ -16,7 +16,7 @@
         <v-img
           cover
           height="220"
-          :src="props.room.photos[0]"
+          src="https://via.placeholder.com/300x200"
           class="rounded"
         />
       </v-col>
@@ -34,14 +34,23 @@
     </v-row>
 
     <v-divider class="pb-3"/>
-    <p class="text-right font-weight-bold px-3">{{ price }} por noite</p>
-    <p class="text-right text-body-2 px-3">{{ nightsNumber }} noite{{ nightsNumber > 1 ? 's' : '' }}</p>
-    <div class="d-flex align-end justify-end px-3 pb-3">
-      <NumberSelect v-model="totalGuests" :min=1 :max="room.capacity" label="Hóspedes" :disabled="maximumRooms < 1" />
-      <NumberSelect v-model="totalRooms" :min=1 :max="maximumRooms" label="Quartos" :disabled="maximumRooms < 1" />
-      <v-btn @click="addRoom" color="secondary" variant="outlined" rounded class="ml-2" :disabled="maximumRooms < 1">
-        Adicionar
-      </v-btn>
+    <div v-if="isSoldOut">
+      <div class="d-flex align-end justify-end px-3 pb-3">
+        <v-chip color="error" variant="tonal" rounded class="ml-2">
+          Esgotado
+        </v-chip>
+      </div>
+    </div>
+    <div v-else>
+      <p class="text-right font-weight-bold px-3">{{ price }} por noite</p>
+      <p class="text-right text-body-2 px-3">{{ nightsNumber }} noite{{ nightsNumber > 1 ? 's' : '' }}</p>
+      <div class="d-flex align-end justify-end px-3 pb-3">
+        <NumberSelect v-model="totalGuests" :min=1 :max="room.capacity" label="Hóspedes" :disabled="maximumRooms < 1" />
+        <NumberSelect v-model="totalRooms" :min=1 :max="maximumRooms" label="Quartos" :disabled="maximumRooms < 1" />
+        <v-btn @click="addRoom" color="secondary" variant="outlined" rounded class="ml-2" :disabled="maximumRooms < 1">
+          Adicionar
+        </v-btn>
+      </div>
     </div>
   </v-card>
 </template>
@@ -63,12 +72,16 @@ const totalGuests = ref<number>(props.room.capacity);
 const totalRooms = ref<number>(1);
 
 const subtitle = computed(() =>
-  `${props.room.capacity} hóspede${props.room.capacity > 1 ? 's' : ''} • ${props.room.beds} cama${props.room.beds > 1 ? 's' : '' }`
+  `${props.room.capacity} hóspede${props.room.capacity > 1 ? 's' : ''}`
+  // `${props.room.capacity} hóspede${props.room.capacity > 1 ? 's' : ''} • ${props.room.beds} cama${props.room.beds > 1 ? 's' : '' }`
 );
 
 const nightsNumber = computed(() => props.checkout.diff(props.checkin, 'days').days);
 
 const price = computed(() => {
+  if (props.roomRates.rates.length === 0) {
+    return 0;
+  }
   let price = props.roomRates.rates[0].prices.find(p => p.paymentMethod === booking.paymentMethod.value)?.amount;
   if (!price) {
     price = props.roomRates.rates[0].defaultPrice;
@@ -89,10 +102,12 @@ const pricePerRoom = computed(() =>
   }, 0)
 );
 
+const isSoldOut = computed(() => props.roomRates.availableRooms === 0 || props.roomRates.rates.length === 0);
+
 const booking = useBooking();
 
 const maximumRooms = computed(() => {
-  const available = props.roomRates.availableQuantity;
+  const available = props.roomRates.availableRooms;
   const selected = booking.selectedRooms.value
     .filter(r => r.roomId === props.room.id)
     .reduce((acc, r) => acc + r.totalRooms, 0);

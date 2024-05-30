@@ -78,7 +78,7 @@ enum Tab {
   Hotel,
   Rooms,
   Region,
-};
+}
 const currentTab = ref(Tab.All);
 
 // Images

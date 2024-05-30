@@ -1,29 +1,30 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { DateTime } from "luxon";
 import { Ref, computed, ref } from "vue";
-import { BookingPage, PaymentMethod, Person, Room, RoomRates, RoomTypeBooking } from "./booking.types";
-import { useToday } from "./date";
+import { BookingPage, Payment, PaymentData, PaymentMethod, Person, Room, RoomRates, RoomTypeBooking } from "./booking.types";
+import { http } from "./http";
 
-const today = useToday();
+const hotelId = import.meta.env.VITE_HOTEL_ID;
 
 const checkin = ref<DateTime>();
 const checkout = ref<DateTime>();
 const page = ref<BookingPage>(BookingPage.Search);
-const mainGuest = ref<Person>({ name: '', email: '', phone: '', document: '' });
-const payer = ref<Person>({ name: '', email: '', phone: '', document: '' });
+const mainGuest = ref<Person>({ fullName: '', email: '', phone: '', document: '' });
+const payer = ref<Person>({ fullName: '', email: '', phone: '', document: '' });
 const selectedRooms = ref<RoomTypeBooking[]>([]);
-const paymentMethod = ref<PaymentMethod>('pix');
-const paymentData = ref({});
+const paymentMethod = ref<PaymentMethod>('Pix');
+const paymentId = ref<string>('');
+// const paymentData = ref<PaymentData>({});
 
 export function useBooking() {
-  const rooms = useRooms();
+  const { rooms } = useRooms();
 
   const summaryList = computed(() => {
-    if (!rooms.value.data) return [];
+    if (!rooms.value) return [];
 
     return selectedRooms.value.map(room => ({
       roomId: room.roomId,
-      name: rooms.value.data?.find(r => r.id === room.roomId)?.name ?? '',
+      name: rooms.value?.find(r => r.id === room.roomId)?.name ?? '',
       quantity: room.totalRooms,
       guestsPerRoom: room.guestsPerRoom,
       amount: room.pricePerRoom * room.totalRooms,
@@ -83,134 +84,110 @@ export function useBooking() {
     totalGuests,
     checkin,
     checkout,
-    paymentData,
+    // paymentData,
+    paymentId,
     // methods
     selectRoom,
     removeRoom,
     clearRooms,
   }
-};
+}
 
 export const useSearch = (checkin: Ref<DateTime>, checkout: Ref<DateTime>) => {
-  const result = ref(useQuery({
+  const { data, error, isPending, isError } = useQuery({
     queryKey: ['search', checkin, checkout],
     queryFn: async () => {
-      return fetchSearch(checkin.value, checkout.value);
-    }
-  }));
+      return await fetchSearch(checkin.value, checkout.value);
+    },
+  });
 
-  return result;
+  return {
+    searchResult: data,
+    isLoadingSearch: isPending,
+    searchError: error,
+    searchHasError: isError,
+  };
 }
 
 export const useRooms = () => {
-  return ref(useQuery({
+  const { data, error, isPending, isError } = useQuery({
     queryKey: ['rooms'],
     queryFn: async () => {
-      return fetchRooms();
+      return await fetchRooms();
     }
-  }));
-}
+  });
 
-export const preBook = () => {
-  return ref(useMutation({
-    mutationFn: preBookMock,
-    onSuccess: (data) => {
-      paymentData.value = data.additionalInformation;
-    }
-  }));
-}
-
-const preBookMock = async () => {
-  await sleep(1000);
   return {
-    bookingId: "b8beef9f-6de3-4270-9ddf-ec7e4e21f2b8",
-    paymentMethod: "pix",
-    additionalInformation: {
-      expiration: DateTime.now().plus( { minutes: 10 }).toISO(),
-      pixCode: '00020101021226820014br.gov.bcb.pix2560pix.stone.com.br/pix/v2/3c63d4a3-ab96-4571-a1a3-6f6c931e7ee7520400005303986540527.205802BR5914Conta primaria6014RIO DE JANEIRO62290525pacluap9wq1fzlh1fk3gkpy5363043797',
+    rooms: data,
+    isLoadingRooms: isPending,
+    roomsError: error,
+    roomsHasError: isError,
+  };
+}
+
+export const usePreBook = () => {
+  return ref(useMutation({
+    mutationFn: preBook,
+    onSuccess: (data) => {
+      paymentId.value = data.paymentId;
     }
-  }
+  }));
+}
+
+export const usePayment = (paymentId: Ref<string>) => {
+  const { data, error, isPending, isFetching, isError, refetch } = useQuery({
+    queryKey: ['payment', paymentId],
+    queryFn: async () => {
+      return await fetchPayment(paymentId.value);
+    },
+  });
+
+  return {
+    payment: data,
+    isLoadingPayment: isPending,
+    isFetchingPayment: isFetching,
+    paymentError: error,
+    paymentIsError: isError,
+    refetchPayment: refetch,
+  };
+}
+
+const preBook = async () => {
+  const bookResponse = await http.post(`/public/hotels/${hotelId}/pre-book`, {
+    checkIn: checkin.value?.toISODate(),
+    checkOut: checkout.value?.toISODate(),
+    paymentMethod: paymentMethod.value,
+    mainGuest: mainGuest.value,
+    payer: payer.value,
+    rooms: selectedRooms.value,
+  });
+
+  return bookResponse.data;
+  // const paymentId = bookResponse.data.paymentId;
+
+  // const paymentResponse = await http.get(`/public/payments/${paymentId}`);
+
+  // return paymentResponse.data;
 }
 
 const fetchSearch = async (checkin: DateTime, checkout: DateTime): Promise<RoomRates[]> => {
-  console.log('fetch search', checkin.toISODate(), checkout.toISODate());
-  await sleep(2000);
-  return [
-    {
-        "roomId": "3a266b79-9e90-43a7-9ceb-338cbf8207cc",
-        "availableQuantity": 7,
-        "checkin": "2024-03-20",
-        "checkout": "2024-03-22",
-        "rates": [
-            {
-                "date": "2024-03-20",
-                "defaultPrice": 119.80,
-                "prices": [
-                    { "amount": 119.80, "guests": 2, "paymentMethod": "pix" },
-                    { "amount": 109.80, "guests": 1, "paymentMethod": "pix" },
-                ]
-            },
-            {
-                "date": "2024-03-21",
-                "defaultPrice": 129.80,
-                "prices": [
-                    { "amount": 129.80, "guests": 2, "paymentMethod": "pix" },
-                    { "amount": 119.80, "guests": 1, "paymentMethod": "pix" },
-                ]
-            }
-        ]
-    },
-    {
-        "roomId": "0de12f36-6816-468e-ba6a-ffe33632212a",
-        "availableQuantity": 3,
-        "checkin": "2024-03-20",
-        "checkout": "2024-03-22",
-        "rates": [
-            {
-                "date": "2024-03-20",
-                "defaultPrice": 139.80,
-                "prices": [
-                    { "amount": 139.80, "guests": 2, "paymentMethod": "pix" },
-                    { "amount": 129.80, "guests": 1, "paymentMethod": "pix" },
-                ]
-            },
-            {
-                "date": "2024-03-21",
-                "defaultPrice": 149.80,
-                "prices": [
-                    { "amount": 149.80, "guests": 2, "paymentMethod": "pix" },
-                    { "amount": 139.80, "guests": 1, "paymentMethod": "pix" },
-                ]
-            }
-        ]
-    },
-  ];
+  const response = await http.get<RoomRates[]>(`/public/hotels/${hotelId}/search`, {
+    params: {
+      checkin: checkin.toISODate(),
+      checkout: checkout.toISODate(),
+    }
+  });
+  return response.data;
 }
 
 const fetchRooms = async (): Promise<Room[]> => {
-  await sleep(100);
-  return [
-    {
-        "id": "3a266b79-9e90-43a7-9ceb-338cbf8207cc",
-        "name": "Quarto Solteiro",
-        "description": "Quarto com cama de solteiro, ar condicionado, TV, frigobar e banheiro privativo.",
-        "capacity": 1,
-        "beds": 1,
-        "photos": [
-            "https://via.placeholder.com/300x200"
-        ]
-    },
-    {
-        "id": "0de12f36-6816-468e-ba6a-ffe33632212a",
-        "name": "Quarto Duplo",
-        "description": "Quarto com cama de casal, ar condicionado, TV, frigobar e banheiro privativo.",
-        "capacity": 2,
-        "beds": 2,
-        "photos": [
-            "https://via.placeholder.com/300x200"
-        ]
-    }
-  ];
+  const response = await http.get<Room[]>(`/public/hotels/${hotelId}/rooms`);
+  return response.data;
 }
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const fetchPayment = async (paymentId: string): Promise<Payment> => {
+  const response = await http.get<Payment>(`/public/payments/${paymentId}`);
+  return response.data;
+}
+
+// const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

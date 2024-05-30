@@ -20,7 +20,7 @@
           </v-col>
           <v-col cols="12" md="6" class="pb-0">
             <v-text-field
-              v-model="booking.payer.value.name"
+              v-model="booking.payer.value.fullName"
               variant="outlined"
               label="Nome completo"
               placeholder="João da Silva"
@@ -69,7 +69,7 @@
           </v-col>
           <v-col cols="12">
             <v-radio-group v-model="booking.paymentMethod.value">
-              <v-radio label="Pix" value="pix"></v-radio>
+              <v-radio label="Pix" value="Pix"></v-radio>
             </v-radio-group>
           </v-col>
         </v-row>
@@ -78,7 +78,7 @@
         <v-spacer />
         <v-btn
           type="submit"
-          :loading="preBookMutation.isPending"
+          :loading="preBook.isPending"
         >
           Continuar
         </v-btn>
@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { useBooking, preBook } from '@/features/booking';
+import { useBooking, usePreBook } from '@/features/booking';
 import { BookingPage } from '@/features/booking.types';
 import { documentMask, phoneMask } from '@/features/mask';
 import { validateDocument, validateEmail, validateName, validatePhone } from '@/features/validation';
@@ -97,24 +97,24 @@ import { SubmitEventPromise } from 'vuetify';
 
 const booking = useBooking();
 
-const shouldRepeatGuestData = ref<boolean>(false);
+const shouldRepeatGuestData = ref<boolean>(true);
 function toggleRepeatGuestData(newValue: boolean|null): void {
   if (newValue === true) {
     booking.payer.value = { ...booking.mainGuest.value };
     return;
   }
 
-  booking.payer.value = { name: '', email: '', phone: '', document: '' };
+  booking.payer.value = { fullName: '', email: '', phone: '', document: '' };
 }
 
-const preBookMutation = preBook();
+const preBook = usePreBook();
 async function nextStep(event: SubmitEventPromise) {
   const result = await event;
   if (!result.valid) {
     return;
   }
 
-  await preBookMutation.value.mutateAsync();
+  await preBook.value.mutateAsync();
 
   booking.page.value = BookingPage.PixForm;
 }

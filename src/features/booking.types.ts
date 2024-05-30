@@ -5,10 +5,26 @@ export enum BookingPage {
   PixForm,
 }
 
-export type PaymentMethod = 'pix';
+export type PaymentMethod = 'Pix';
+export type PaymentStatus = 'Requested' | 'Paid' | 'Canceled' | 'Refunded';
+
+export type Payment = {
+  id: string,
+  bookingId: string,
+  amount: number,
+  method: PaymentMethod,
+  status: PaymentStatus,
+  additionalInformation: PaymentData,
+  createdAt: string,
+}
+
+export type PaymentData = {
+  pixCode?: string,
+  expiration?: string,
+}
 
 export type Person = {
-  name: string,
+  fullName: string,
   email: string,
   phone: string,
   document: string,
@@ -19,13 +35,13 @@ export type Room = {
   name: string,
   description: string,
   capacity: number,
-  beds: number,
-  photos: string[],
+  // beds: number,
+  // photos: string[],
 }
 
 export type RoomRates = {
   roomId: string,
-  availableQuantity: number,
+  availableRooms: number,
   checkin: string,
   checkout: string,
   rates: {

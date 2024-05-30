@@ -18,7 +18,7 @@ export function validateEmail(email: string): string|boolean {
   }
 
   if (!email.match(
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   )) {
     return 'Email inválido.'
   }
@@ -61,9 +61,9 @@ export function validateDocument(document: string): string|boolean {
 function isValidCpf(cpf: string) {
   cpf = cpf.replace(/\D/g, '');
   if(cpf.toString().length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-  var result = true;
+  let result = true;
   [9,10].forEach(function(j){
-      var soma = 0, r;
+      let soma = 0, r;
       cpf.split(/(?=)/).splice(0,j).forEach(function(e, i){
           soma += parseInt(e) * ((j+2)-(i+1));
       });
