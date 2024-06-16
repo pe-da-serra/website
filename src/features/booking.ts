@@ -1,19 +1,25 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { DateTime } from "luxon";
 import { Ref, computed, ref } from "vue";
-import { BookingPage, Payment, PaymentData, PaymentMethod, Person, Room, RoomRates, RoomTypeBooking } from "./booking.types";
+import { BookingPage, Payment, PaymentMethod, Person, Room, RoomRates, RoomTypeBooking } from "./booking.types";
 import { http } from "./http";
+import { VForm } from "vuetify/components";
+import { useDateFormat, useStorageAsync } from "@vueuse/core";
 
 const hotelId = import.meta.env.VITE_HOTEL_ID;
 
-const checkin = ref<DateTime>();
-const checkout = ref<DateTime>();
-const page = ref<BookingPage>(BookingPage.Search);
-const mainGuest = ref<Person>({ fullName: '', email: '', phone: '', document: '' });
-const payer = ref<Person>({ fullName: '', email: '', phone: '', document: '' });
-const selectedRooms = ref<RoomTypeBooking[]>([]);
-const paymentMethod = ref<PaymentMethod>('Pix');
-const paymentId = ref<string>('');
+const checkin = useStorageAsync<Date>('checkin', null);
+const checkout = useStorageAsync<Date>('checkout', null);
+const page = useStorageAsync<BookingPage>('page', BookingPage.Search);
+const mainGuest = useStorageAsync<Person>('main-guest', { fullName: '', email: '', phone: '', document: '' });
+const payer = useStorageAsync<Person>('payer', { fullName: '', email: '', phone: '', document: '' });
+const selectedRooms = useStorageAsync<RoomTypeBooking[]>('selected-rooms', []);
+const paymentMethod = useStorageAsync<PaymentMethod>('payment-method', 'Pix');
+const paymentId = useStorageAsync<string>('payment-id', '');
+
+const guestForm = ref<VForm>();
+const paymentForm = ref<VForm>();
+
 // const paymentData = ref<PaymentData>({});
 
 export function useBooking() {
@@ -39,7 +45,7 @@ export function useBooking() {
     summaryList.value.reduce((acc, listItem) => acc + (listItem.guestsPerRoom * listItem.quantity), 0)
   );
 
-  function selectRoom(room: RoomTypeBooking, checkinDate: DateTime, checkoutDate: DateTime) {
+  function selectRoom(room: RoomTypeBooking, checkinDate: Date, checkoutDate: Date) {
     checkin.value = checkinDate;
     checkout.value = checkoutDate;
 
@@ -65,6 +71,38 @@ export function useBooking() {
     }
   }
 
+  const preBookAction = usePreBook();
+  async function nextStep() {
+    if (page.value === BookingPage.Search) {
+      page.value = BookingPage.GuestForm;
+    } else if (page.value === BookingPage.GuestForm) {
+      const result = await guestForm.value?.validate();
+      if (result?.valid) {
+        payer.value = { ...mainGuest.value };
+        page.value = BookingPage.PaymentForm;
+      }
+    } else if (page.value === BookingPage.PaymentForm) {
+      const result = await paymentForm.value?.validate();
+      if (result?.valid) {
+
+        await preBookAction.value.mutateAsync();
+        page.value = BookingPage.PixForm;
+      }
+    }
+  }
+
+  function previousStep() {
+    if (page.value === BookingPage.Search) {
+      return;
+    } else if (page.value === BookingPage.GuestForm) {
+      page.value = BookingPage.Search;
+    } else if (page.value === BookingPage.PaymentForm) {
+      page.value = BookingPage.GuestForm;
+    } else if (page.value === BookingPage.PixForm) {
+      return;
+    }
+  }
+
   function clearRooms() {
     if (selectedRooms.value.length > 0) {
       checkin.value = undefined;
@@ -86,9 +124,13 @@ export function useBooking() {
     checkout,
     // paymentData,
     paymentId,
+    guestForm,
+    paymentForm,
     // methods
     selectRoom,
     removeRoom,
+    nextStep,
+    previousStep,
     clearRooms,
   }
 }
@@ -154,8 +196,8 @@ export const usePayment = (paymentId: Ref<string>) => {
 
 const preBook = async () => {
   const bookResponse = await http.post(`/public/hotels/${hotelId}/pre-book`, {
-    checkIn: checkin.value?.toISODate(),
-    checkOut: checkout.value?.toISODate(),
+    checkIn: useDateFormat(checkin.value, 'YYYY-MM-DD').value,
+    checkOut: useDateFormat(checkout.value, 'YYYY-MM-DD').value,
     paymentMethod: paymentMethod.value,
     mainGuest: mainGuest.value,
     payer: payer.value,
@@ -168,6 +210,14 @@ const preBook = async () => {
   // const paymentResponse = await http.get(`/public/payments/${paymentId}`);
 
   // return paymentResponse.data;
+}
+
+export const summaryButtonText = (page: BookingPage) => {
+  if (page === BookingPage.Search) return 'Reservar agora';
+  if (page === BookingPage.GuestForm) return 'Continuar';
+  if (page === BookingPage.PaymentForm) return 'Ir para pagamento';
+
+  return '';
 }
 
 const fetchSearch = async (checkin: DateTime, checkout: DateTime): Promise<RoomRates[]> => {

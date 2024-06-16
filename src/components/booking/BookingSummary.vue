@@ -19,11 +19,11 @@
     <v-divider v-if="model" class="mb-1" />
     <div class="py-4">
       <p class="text-center">
-        {{ toString(checkin) }}
+        {{ formattedCheckin }}
         <v-icon size="small" start end>
           mdi-arrow-right
         </v-icon>
-        {{ toString(checkout) }}
+        {{ formattedCheckout }}
       </p>
       <p class="text-center pt-2">{{ totalGuests }} hóspede{{ totalGuests !== 1 ? 's' : '' }}</p>
     </div>
@@ -58,45 +58,50 @@
     </div>
 
 
-    <v-divider class="mt-auto"/>
-    <div class="px-3 pb-3">
+    <div class="px-3 pb-3 mt-auto">
       <div class="d-flex justify-space-between py-5 px-3">
         <p class="font-weight-bold">Total</p>
         <p class="font-weight-bold">{{ toMoney(totalAmount) }}</p>
       </div>
-      <v-btn
-        block
-        variant="flat"
-        rounded
-        size="large"
-        text="Reservar agora"
-        @click="nextPage"
-      />
-      <p class="text-center text-body-2 text-medium-emphasis pt-3 pb-1">
-        <v-icon size="small">mdi-shield-check-outline</v-icon>
-        Pagamento seguro
-      </p>
+      <div v-if="summaryButtonText(page)">
+        <v-btn
+          block
+          variant="flat"
+          rounded
+          size="large"
+          :text="summaryButtonText(page)"
+          @click="nextPage"
+        />
+        <p class="text-center text-body-2 text-medium-emphasis pt-3 pb-1">
+          <v-icon size="small">mdi-shield-check-outline</v-icon>
+          Pagamento seguro
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineModel } from 'vue';
-import { useBooking } from '@/features/booking';
+import { defineModel, ref } from 'vue';
+import { useBooking, summaryButtonText } from '@/features/booking';
 import { BookingPage } from '@/features/booking.types';
-import { toString } from '@/features/date';
 import { toMoney } from '@/features/money';
+import { useDateFormat } from '@vueuse/core';
 
-const props = defineProps<{
+defineProps<{
   isMobile: boolean,
 }>();
 
 const model = defineModel<boolean>({ required: true });
 
-const { page, removeRoom, summaryList, totalAmount, totalGuests, checkin, checkout } = useBooking();
+const { page, removeRoom, summaryList, totalAmount, totalGuests, checkin, checkout, nextStep } = useBooking();
+
+const formatter = ref('DD/MM/YYYY');
+const formattedCheckin = useDateFormat(checkin, formatter);
+const formattedCheckout = useDateFormat(checkout, formatter);
 
 const nextPage = () => {
-  page.value = BookingPage.GuestForm;
+  nextStep();
   model.value = false;
 }
 

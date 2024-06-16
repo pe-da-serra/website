@@ -103,7 +103,7 @@
   </v-dialog>
 
   <v-app-bar
-    v-if="smAndDown && selectedRooms.length > 0"
+    v-if="smAndDown && selectedRooms.length > 0 && summaryButtonText(page)"
     location="bottom"
     height="110"
     class="rounded-t-xl pa-0 ma-0"
@@ -113,14 +113,14 @@
       <div class="w-100 d-flex align-center px-4 justify-space-between">
         <div>
           <p class="text-h6 font-weight-bold">{{ toMoney(totalAmount) }}</p>
-          <p>{{ toShortString(checkin) }} - {{ toShortString(checkout) }}</p>
+          <p>{{ useDateFormat(checkin, 'D MMM').value }} - {{ useDateFormat(checkout, 'D MMM').value }}</p>
         </div>
         <v-btn
           color="primary"
           variant="flat"
           rounded size="large"
-          @click="page = BookingPage.GuestForm"
-        >Reservar</v-btn>
+          @click="nextStep"
+        >{{ summaryButtonText(page) }}</v-btn>
       </div>
     </div>
   </v-app-bar>
@@ -132,13 +132,13 @@ import BookingPaymentForm from '@/components/booking/BookingPaymentForm.vue';
 import BookingPixForm from '@/components/booking/BookingPixForm.vue';
 import BookingSummary from '@/components/booking/BookingSummary.vue';
 import BookingRoomCard from '@/components/booking/BookingRoomCard.vue';
-import { useBooking, useSearch, useRooms } from '@/features/booking';
+import { useBooking, useSearch, useRooms, summaryButtonText } from '@/features/booking';
 import { Room, RoomRates, BookingPage } from '@/features/booking.types';
 import { toMoney } from '@/features/money';
-import { toShortString } from '@/features/date';
 import { DateTime } from 'luxon';
 import { ref, toRef, watchEffect, computed } from 'vue';
 import { useDisplay } from 'vuetify';
+import { useDateFormat } from '@vueuse/core';
 
 export type BookProps = {
   checkIn: DateTime,
@@ -150,7 +150,7 @@ const summary = ref<boolean>(false);
 
 const { smAndDown, mdAndUp } = useDisplay();
 
-const { page, selectedRooms, totalAmount, checkin, checkout } = useBooking();
+const { page, selectedRooms, totalAmount, checkin, checkout, nextStep,  } = useBooking();
 
 watchEffect(() => {
   if (selectedRooms.value.length === 0) {

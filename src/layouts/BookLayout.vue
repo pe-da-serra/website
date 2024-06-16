@@ -21,7 +21,10 @@
       <v-btn disabled></v-btn>
     </template>
 
-    <template v-slot:extension>
+    <template
+      v-slot:extension
+      v-if="page === BookingPage.Search"
+    >
       <v-row class="" justify="center" no-gutters>
         <v-col cols="4" sm="3" md="2" xl="1">
           <DateInput

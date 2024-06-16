@@ -17,11 +17,13 @@
       </v-app-bar-title>
 
       <template v-slot:append>
-        <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
-        <v-btn disabled></v-btn>
+        <v-btn v-if="!mobile" variant="elevated" color="primary">
+          <v-icon start>mdi-calendar-check</v-icon>
+          Reservar
+        </v-btn>
+        <v-btn v-if="mobile" disabled />
       </template>
 
-      <!-- <v-btn v-if="!mobile" variant="outlined">Reservar</v-btn> -->
       <!-- <v-btn icon="mdi-translate" /> -->
     </v-app-bar>
 
@@ -40,6 +42,9 @@ import { ref } from 'vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppNavigationDrawer from '@/components/AppNavigationDrawer.vue';
 import { routeNames } from '@/router';
+import { useDisplay } from 'vuetify';
 
 const drawer = ref(false);
+
+const { mobile } = useDisplay();
 </script>

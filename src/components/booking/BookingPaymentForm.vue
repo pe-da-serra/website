@@ -1,12 +1,11 @@
 <template>
-  <v-form validate-on="blur" @submit.prevent="nextStep">
+  <v-form validate-on="blur" @submit.prevent="nextStep" :ref="booking.paymentForm">
     <v-card>
-      <v-card-item>
-        <v-btn variant="text" class="text-none" @click="booking.page.value = BookingPage.GuestForm">
-          <v-icon start>mdi-arrow-left</v-icon>
-          Voltar
-        </v-btn>
-        <v-card-title>Pagamento</v-card-title>
+      <v-card-item class="pa-2">
+        <v-card-title class="d-flex align-center">
+          <v-btn @click="booking.previousStep" icon="mdi-arrow-left" variant="text" />
+          <span class="pl-3">Pagamento</span>
+        </v-card-title>
       </v-card-item>
       <v-card-text>
         <v-row>

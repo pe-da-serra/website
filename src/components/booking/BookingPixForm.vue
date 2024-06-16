@@ -18,6 +18,36 @@
     <v-card-text v-if="isLoadingPayment">
       Carregando...
     </v-card-text>
+    <v-container style="height: 400px;" v-else-if="payment?.status === 'Canceled'">
+      <v-row
+        align="center"
+        class="fill-height"
+        justify="center"
+      >
+        <v-col class="text-center">
+          <h1>
+            <v-icon color="error" size="x-large">mdi-close-circle</v-icon>
+          </h1>
+          <h1 class="py-2">Pagamento cancelado</h1>
+          <p>A reserva foi cancelada. Faça uma nova reserva ou entre em contato conosco.</p>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container style="height: 400px;" v-else-if="payment?.status === 'Paid'">
+      <v-row
+        align="center"
+        class="fill-height"
+        justify="center"
+      >
+        <v-col class="text-center">
+          <h1>
+            <v-icon color="success" size="x-large">mdi-check-circle</v-icon>
+          </h1>
+          <h1 class="py-2">Pagamento efetuado!</h1>
+          <p>Você receberá em instates um email com a confirmação da reserva.</p>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-card-text v-else-if="payment?.status === 'Requested'">
       <div class="d-flex flex-column align-center">
         <span>Tempo restante</span>
@@ -38,10 +68,6 @@
         />
       </div>
     </v-card-text>
-    <v-card-text v-else-if="payment?.status === 'Paid'">
-      <p>Pagamento efetuado!</p>
-      <p>Você receberá em instates um email com a confirmação da reserva.</p>
-    </v-card-text>
   </v-card>
 </template>
 
@@ -55,7 +81,7 @@ import { ref } from 'vue';
 import { onUnmounted } from 'vue';
 
 const booking = useBooking();
-const { payment, isLoadingPayment, isFetchingPayment, refetchPayment } = usePayment(booking.paymentId);
+const { payment, isLoadingPayment, refetchPayment } = usePayment(booking.paymentId);
 
 const pixCode = computed(() => payment.value?.additionalInformation?.pixCode!);
 const expiration = computed(() => fromIsoDate(payment.value?.additionalInformation?.expiration!));
@@ -72,6 +98,12 @@ const expirationTimer = setInterval(() => {
 
 const refetchTimer = setInterval(() => {
   if (payment.value?.status === 'Paid') {
+    clearInterval(refetchTimer);
+    return;
+  }
+
+  if (remainingTime.value <= Duration.fromMillis(0)) {
+    refetchPayment();
     clearInterval(refetchTimer);
     return;
   }

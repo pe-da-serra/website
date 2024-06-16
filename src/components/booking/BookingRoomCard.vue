@@ -1,5 +1,5 @@
 <template>
-  <v-card class="w-100">
+  <v-card class="w-100" :disabled="isSoldOut">
     <v-img
       v-if="xs"
       cover
@@ -33,7 +33,6 @@
       </v-col>
     </v-row>
 
-    <v-divider class="pb-3"/>
     <div v-if="isSoldOut">
       <div class="d-flex align-end justify-end px-3 pb-3">
         <v-chip color="error" variant="tonal" rounded class="ml-2">
@@ -42,6 +41,7 @@
       </div>
     </div>
     <div v-else>
+      <v-divider class="pb-3"/>
       <p class="text-right font-weight-bold px-3">{{ price }} por noite</p>
       <p class="text-right text-body-2 px-3">{{ nightsNumber }} noite{{ nightsNumber > 1 ? 's' : '' }}</p>
       <div class="d-flex align-end justify-end px-3 pb-3">
