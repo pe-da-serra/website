@@ -1,11 +1,29 @@
 <template>
   <v-card class="w-100" :disabled="isSoldOut">
-    <v-img
+    <v-carousel
+      v-if="xs"
+      cover
+      :hide-delimiters="photos.length <= 1"
+      hide-delimiter-background
+      :show-arrows="false"
+      touch
+      cycle
+      height="175"
+    >
+      <v-carousel-item
+        v-for="img in photos"
+        :key="img"
+        :src="img"
+        lazy-src="https://via.placeholder.com/300x200"
+        cover
+      />
+    </v-carousel>
+    <!-- <v-img
       v-if="xs"
       cover
       height="175"
-      src="https://via.placeholder.com/300x200"
-    />
+      :src="photos[0]"
+    /> -->
 
     <v-row>
       <v-col
@@ -13,12 +31,28 @@
         class="ma-3 mr-0 pr-0"
         cols="6"
       >
-        <v-img
+        <v-carousel
+          :hide-delimiters="photos.length <= 1"
+          :show-arrows="false"
+          touch
+          cycle
+          height="220"
+          class="rounded"
+        >
+          <v-carousel-item
+            v-for="img in photos"
+            :key="img"
+            :src="img"
+            lazy-src="https://via.placeholder.com/300x200"
+            cover
+          />
+        </v-carousel>
+        <!-- <v-img
           cover
           height="220"
-          src="https://via.placeholder.com/300x200"
+          :src="photos[0]"
           class="rounded"
-        />
+        /> -->
       </v-col>
       <v-col :class="{ 'pl-0': smAndUp }">
         <v-card-title>{{ props.room.name }}</v-card-title>
@@ -75,6 +109,14 @@ const subtitle = computed(() =>
   `${props.room.capacity} hóspede${props.room.capacity > 1 ? 's' : ''}`
   // `${props.room.capacity} hóspede${props.room.capacity > 1 ? 's' : ''} • ${props.room.beds} cama${props.room.beds > 1 ? 's' : '' }`
 );
+
+const photos = computed(() => {
+  if (props.room.photos.length === 0) {
+    return ['https://via.placeholder.com/300x200'];
+  }
+
+  return props.room.photos;
+});
 
 const nightsNumber = computed(() => props.checkout.diff(props.checkin, 'days').days);
 

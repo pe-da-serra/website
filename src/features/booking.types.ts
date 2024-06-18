@@ -36,7 +36,7 @@ export type Room = {
   description: string,
   capacity: number,
   // beds: number,
-  // photos: string[],
+  photos: string[],
 }
 
 export type RoomRates = {
