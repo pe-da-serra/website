@@ -57,9 +57,9 @@
           <div v-else-if="page == BookingPage.PaymentForm">
             <BookingPaymentForm />
           </div>
-          <div v-else-if="page == BookingPage.PixForm">
+          <!-- <div v-else-if="page == BookingPage.PixForm">
             <BookingPixForm />
-          </div>
+          </div> -->
           <div v-else>
             <div v-if="searchHasError || roomsHasError">
               Error!
@@ -91,54 +91,20 @@
     </v-col>
   </v-row>
 
-  <v-dialog
-    v-model="summary"
-    fullscreen
-    transition="dialog-bottom-transition"
-  >
-    <BookingSummary
-      v-model="summary"
-      is-mobile
-    />
-  </v-dialog>
-
-  <v-app-bar
-    v-if="smAndDown && selectedRooms.length > 0 && summaryButtonText(page)"
-    location="bottom"
-    height="110"
-    class="rounded-t-xl pa-0 ma-0"
-  >
-    <div class="d-flex flex-column w-100">
-      <p class="text-center text-body-1 mt-n1" @click="summary = true">Ver detalhes <v-icon>mdi-chevron-up</v-icon></p>
-      <div class="w-100 d-flex align-center px-4 justify-space-between">
-        <div>
-          <p class="text-h6 font-weight-bold">{{ toMoney(totalAmount) }}</p>
-          <p>{{ useDateFormat(checkin, 'D MMM').value }} - {{ useDateFormat(checkout, 'D MMM').value }}</p>
-        </div>
-        <v-btn
-          color="primary"
-          variant="flat"
-          rounded size="large"
-          @click="nextStep"
-        >{{ summaryButtonText(page) }}</v-btn>
-      </div>
-    </div>
-  </v-app-bar>
+  <BookingSummaryBar v-model="summary" />
 </template>
 
 <script setup lang="ts">
 import BookingGuestForm from '@/components/booking/BookingGuestForm.vue';
 import BookingPaymentForm from '@/components/booking/BookingPaymentForm.vue';
-import BookingPixForm from '@/components/booking/BookingPixForm.vue';
 import BookingSummary from '@/components/booking/BookingSummary.vue';
 import BookingRoomCard from '@/components/booking/BookingRoomCard.vue';
-import { useBooking, useSearch, useRooms, summaryButtonText } from '@/features/booking';
+import { useBooking, useSearch, useRooms } from '@/features/booking';
 import { Room, RoomRates, BookingPage } from '@/features/booking.types';
-import { toMoney } from '@/features/money';
 import { DateTime } from 'luxon';
 import { ref, toRef, watchEffect, computed } from 'vue';
 import { useDisplay } from 'vuetify';
-import { useDateFormat } from '@vueuse/core';
+import BookingSummaryBar from '@/components/booking/BookingSummaryBar.vue';
 
 export type BookProps = {
   checkIn: DateTime,
@@ -148,9 +114,9 @@ const props = defineProps<BookProps>();
 
 const summary = ref<boolean>(false);
 
-const { smAndDown, mdAndUp } = useDisplay();
+const { mdAndUp } = useDisplay();
 
-const { page, selectedRooms, totalAmount, checkin, checkout, nextStep,  } = useBooking();
+const { page, selectedRooms } = useBooking();
 
 watchEffect(() => {
   if (selectedRooms.value.length === 0) {

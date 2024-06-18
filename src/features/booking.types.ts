@@ -2,7 +2,7 @@ export enum BookingPage {
   Search,
   GuestForm,
   PaymentForm,
-  PixForm,
+  // PixForm,
 }
 
 export type PaymentMethod = 'Pix';

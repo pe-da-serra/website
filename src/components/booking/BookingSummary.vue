@@ -63,7 +63,7 @@
         <p class="font-weight-bold">Total</p>
         <p class="font-weight-bold">{{ toMoney(totalAmount) }}</p>
       </div>
-      <div v-if="summaryButtonText(page)">
+      <div v-if="!hideButton && summaryButtonText(page)">
         <v-btn
           block
           variant="flat"
@@ -71,6 +71,8 @@
           size="large"
           :text="summaryButtonText(page)"
           @click="nextPage"
+          :loading="isNextStepLoading"
+          :disabled="isNextStepLoading"
         />
         <p class="text-center text-body-2 text-medium-emphasis pt-3 pb-1">
           <v-icon size="small">mdi-shield-check-outline</v-icon>
@@ -88,13 +90,17 @@ import { BookingPage } from '@/features/booking.types';
 import { toMoney } from '@/features/money';
 import { useDateFormat } from '@vueuse/core';
 
-defineProps<{
+withDefaults(defineProps<{
+  hideButton?: boolean,
   isMobile: boolean,
-}>();
+}>(), {
+  hideButton: false,
+  isMobile: false,
+})
 
 const model = defineModel<boolean>({ required: true });
 
-const { page, removeRoom, summaryList, totalAmount, totalGuests, checkin, checkout, nextStep } = useBooking();
+const { page, removeRoom, summaryList, totalAmount, totalGuests, checkin, checkout, isNextStepLoading, nextStep } = useBooking();
 
 const formatter = ref('DD/MM/YYYY');
 const formattedCheckin = useDateFormat(checkin, formatter);

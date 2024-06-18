@@ -5,6 +5,8 @@ import { BookingPage, Payment, PaymentMethod, Person, Room, RoomRates, RoomTypeB
 import { http } from "./http";
 import { VForm } from "vuetify/components";
 import { useDateFormat, useStorageAsync } from "@vueuse/core";
+import { useRouter } from "vue-router";
+import { routeNames } from "@/router";
 
 const hotelId = import.meta.env.VITE_HOTEL_ID;
 
@@ -15,12 +17,20 @@ const mainGuest = useStorageAsync<Person>('main-guest', { fullName: '', email: '
 const payer = useStorageAsync<Person>('payer', { fullName: '', email: '', phone: '', document: '' });
 const selectedRooms = useStorageAsync<RoomTypeBooking[]>('selected-rooms', []);
 const paymentMethod = useStorageAsync<PaymentMethod>('payment-method', 'Pix');
-const paymentId = useStorageAsync<string>('payment-id', '');
+// const paymentId = useStorageAsync<string>('payment-id', '');
 
 const guestForm = ref<VForm>();
 const paymentForm = ref<VForm>();
 
-// const paymentData = ref<PaymentData>({});
+export const reset = () => {
+  checkin.value = null;
+  checkout.value = null;
+  page.value = BookingPage.Search;
+  mainGuest.value = { fullName: '', email: '', phone: '', document: '' };
+  payer.value = { fullName: '', email: '', phone: '', document: '' };
+  selectedRooms.value = [];
+  paymentMethod.value = 'Pix';
+}
 
 export function useBooking() {
   const { rooms } = useRooms();
@@ -85,8 +95,8 @@ export function useBooking() {
       const result = await paymentForm.value?.validate();
       if (result?.valid) {
 
-        await preBookAction.value.mutateAsync();
-        page.value = BookingPage.PixForm;
+        await preBookAction.mutateAsync();
+        // page.value = BookingPage.PixForm;
       }
     }
   }
@@ -98,10 +108,18 @@ export function useBooking() {
       page.value = BookingPage.Search;
     } else if (page.value === BookingPage.PaymentForm) {
       page.value = BookingPage.GuestForm;
-    } else if (page.value === BookingPage.PixForm) {
-      return;
+    // } else if (page.value === BookingPage.PixForm) {
+    //   return;
     }
   }
+
+  const isNextStepLoading = computed<boolean>(() => {
+    if (page.value === BookingPage.PaymentForm) {
+      return preBookAction.isPending.value;
+    }
+
+    return false;
+  })
 
   function clearRooms() {
     if (selectedRooms.value.length > 0) {
@@ -122,11 +140,10 @@ export function useBooking() {
     totalGuests,
     checkin,
     checkout,
-    // paymentData,
-    paymentId,
+    // paymentId,
     guestForm,
     paymentForm,
-    // methods
+    isNextStepLoading,
     selectRoom,
     removeRoom,
     nextStep,
@@ -168,12 +185,14 @@ export const useRooms = () => {
 }
 
 export const usePreBook = () => {
-  return ref(useMutation({
+  const router = useRouter();
+  return useMutation({
     mutationFn: preBook,
     onSuccess: (data) => {
-      paymentId.value = data.paymentId;
-    }
-  }));
+      router.push({ name: routeNames.bookPayment, params: { paymentId: data.paymentId } })
+        .then(() => reset());
+    },
+  });
 }
 
 export const usePayment = (paymentId: Ref<string>) => {
@@ -205,17 +224,12 @@ const preBook = async () => {
   });
 
   return bookResponse.data;
-  // const paymentId = bookResponse.data.paymentId;
-
-  // const paymentResponse = await http.get(`/public/payments/${paymentId}`);
-
-  // return paymentResponse.data;
 }
 
 export const summaryButtonText = (page: BookingPage) => {
-  if (page === BookingPage.Search) return 'Reservar agora';
+  if (page === BookingPage.Search) return 'Reservar';
   if (page === BookingPage.GuestForm) return 'Continuar';
-  if (page === BookingPage.PaymentForm) return 'Ir para pagamento';
+  if (page === BookingPage.PaymentForm) return 'Continuar';
 
   return '';
 }

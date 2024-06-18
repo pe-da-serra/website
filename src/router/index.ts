@@ -10,6 +10,7 @@ export const routeNames = {
   photos: 'Photos',
   contact: 'Contact',
   book: 'Book',
+  bookPayment: 'BookPayment',
   room: {
     single: 'SingleRoom',
     couple: 'CoupleRoom',
@@ -97,6 +98,12 @@ export const routes: RouteRecordRaw[] = [
         path: 'quartos/apartamento',
         name: routeNames.room.apartment,
         component: () => import(/* webpackChunkName: "rooms-apartment" */ '@/views/rooms/Apartment.vue'),
+      },
+      {
+        path: '/pagamento/:paymentId',
+        name: routeNames.bookPayment,
+        component: () => import('@/views/booking/Payment.vue'),
+        props: true,
       },
     ],
   },

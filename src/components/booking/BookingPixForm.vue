@@ -74,14 +74,18 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import QrCode from './QrCode.vue';
-import { useBooking, usePayment } from '@/features/booking';
+import { usePayment } from '@/features/booking';
 import { DateTime, Duration } from 'luxon';
 import { fromIsoDate } from '@/features/date';
 import { ref } from 'vue';
 import { onUnmounted } from 'vue';
 
-const booking = useBooking();
-const { payment, isLoadingPayment, refetchPayment } = usePayment(booking.paymentId);
+const props = defineProps<{
+  paymentId: string,
+}>();
+
+const paymentId = computed(() => props.paymentId);
+const { payment, isLoadingPayment, refetchPayment } = usePayment(paymentId);
 
 const pixCode = computed(() => payment.value?.additionalInformation?.pixCode!);
 const expiration = computed(() => fromIsoDate(payment.value?.additionalInformation?.expiration!));

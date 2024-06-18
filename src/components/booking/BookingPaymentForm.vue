@@ -1,5 +1,5 @@
 <template>
-  <v-form validate-on="blur" @submit.prevent="nextStep" :ref="booking.paymentForm">
+  <v-form validate-on="blur" @submit.prevent :ref="booking.paymentForm">
     <v-card>
       <v-card-item class="pa-2">
         <v-card-title class="d-flex align-center">
@@ -73,7 +73,7 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card-actions>
+      <!-- <v-card-actions>
         <v-spacer />
         <v-btn
           type="submit"
@@ -81,18 +81,16 @@
         >
           Continuar
         </v-btn>
-      </v-card-actions>
+      </v-card-actions> -->
     </v-card>
   </v-form>
 </template>
 
 <script setup lang="ts">
 import { useBooking, usePreBook } from '@/features/booking';
-import { BookingPage } from '@/features/booking.types';
 import { documentMask, phoneMask } from '@/features/mask';
 import { validateDocument, validateEmail, validateName, validatePhone } from '@/features/validation';
 import { ref } from 'vue';
-import { SubmitEventPromise } from 'vuetify';
 
 const booking = useBooking();
 
@@ -107,14 +105,14 @@ function toggleRepeatGuestData(newValue: boolean|null): void {
 }
 
 const preBook = usePreBook();
-async function nextStep(event: SubmitEventPromise) {
-  const result = await event;
-  if (!result.valid) {
-    return;
-  }
+// async function nextStep(event: SubmitEventPromise) {
+//   const result = await event;
+//   if (!result.valid) {
+//     return;
+//   }
 
-  await preBook.value.mutateAsync();
+//   await preBook.mutateAsync();
 
-  booking.page.value = BookingPage.PixForm;
-}
+//   booking.page.value = BookingPage.PixForm;
+// }
 </script>
