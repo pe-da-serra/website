@@ -69,7 +69,7 @@
             <div v-else>
               <BookingRoomCard
                 v-for="roomRates in searchResult"
-                :key="roomRates.roomId"
+                :key="roomRates.roomTypeId"
                 :room-rates="roomRates"
                 :room="roomFromRate(roomRates)"
                 :checkin="props.checkIn"
@@ -130,7 +130,7 @@ const { rooms, roomsError, isLoadingRooms, roomsHasError } = useRooms();
 const isLoading = computed(() => isLoadingSearch.value || isLoadingRooms.value);
 
 function roomFromRate(roomRates: RoomRates): Room {
-  const room = rooms.value?.find(room => room.id === roomRates.roomId);
+  const room = rooms.value?.find(room => room.id === roomRates.roomTypeId);
 
   if (!room) {
     throw new Error('Room not found');

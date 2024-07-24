@@ -16,6 +16,7 @@ const page = useStorageAsync<BookingPage>('page', BookingPage.Search);
 const mainGuest = useStorageAsync<Person>('main-guest', { fullName: '', email: '', phone: '', document: '' });
 const payer = useStorageAsync<Person>('payer', { fullName: '', email: '', phone: '', document: '' });
 const selectedRooms = useStorageAsync<RoomTypeBooking[]>('selected-rooms', []);
+const ratePlanId = useStorageAsync<string>('rate-plan-id', '');
 const paymentMethod = useStorageAsync<PaymentMethod>('payment-method', 'Pix');
 // const paymentId = useStorageAsync<string>('payment-id', '');
 
@@ -58,6 +59,7 @@ export function useBooking() {
   function selectRoom(room: RoomTypeBooking, checkinDate: Date, checkoutDate: Date) {
     checkin.value = checkinDate;
     checkout.value = checkoutDate;
+    ratePlanId.value = room.ratePlanId;
 
     const index = selectedRooms.value.findIndex(r => r.roomId === room.roomId && r.guestsPerRoom === room.guestsPerRoom);
     if (index >= 0) {
@@ -221,6 +223,7 @@ const preBook = async () => {
     mainGuest: mainGuest.value,
     payer: payer.value,
     rooms: selectedRooms.value,
+    ratePlanId: ratePlanId.value,
   });
 
   return bookResponse.data;

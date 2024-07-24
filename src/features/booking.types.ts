@@ -40,17 +40,16 @@ export type Room = {
 }
 
 export type RoomRates = {
-  roomId: string,
+  roomTypeId: string,
   availableRooms: number,
   checkin: string,
   checkout: string,
-  rates: {
-    date: string,
-    defaultPrice: number,
-    prices: {
-      amount: number,
+  ratePlans: {
+    ratePlanId: string,
+    rates: {
+      date: string,
       guests: number,
-      paymentMethod: string,
+      price: number,
     }[],
   }[],
 };
@@ -60,4 +59,5 @@ export type RoomTypeBooking = {
   guestsPerRoom: number,
   totalRooms: number,
   pricePerRoom: number,
+  ratePlanId: string,
 }
