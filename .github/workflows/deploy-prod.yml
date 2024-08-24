@@ -5,10 +5,6 @@ on:
       - 'v**'
   workflow_dispatch:
 
-# Sets the GITHUB_TOKEN permissions
-permissions:
-  contents: read
-
 # Allow one concurrent deployment
 concurrency:
   group: production
@@ -28,8 +24,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: dist
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        run-id: ${{ github.event.workflow_run.id }}
 
     - name: FTP Deploy Locaweb
       uses: locaweb/ftp-deploy@1.0.0
