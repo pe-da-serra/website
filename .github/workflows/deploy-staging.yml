@@ -1,0 +1,37 @@
+name: '[Demo] Deploy'
+on:
+  push:
+    branch:
+      - 'booking'
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: staging
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      environment: staging
+
+  deploy:
+    needs: build
+    environment: staging
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download compiled website
+      uses: actions/download-artifact@v4
+      with:
+        name: dist
+        path: dist
+
+    - name: Publish to Cloudflare Pages
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: 0f20863ce606a851a24e64d30dc8ec9c
+        projectName: '[Demo] Pé da Serra Hotel'
+        directory: dist
