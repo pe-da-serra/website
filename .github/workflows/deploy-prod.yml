@@ -11,7 +11,7 @@ permissions:
 
 # Allow one concurrent deployment
 concurrency:
-  group: 'deploy-prod'
+  group: production
   cancel-in-progress: true
 
 jobs:
@@ -20,6 +20,7 @@ jobs:
 
   deploy:
     needs: build
+    environment: production
     runs-on: ubuntu-latest
 
     steps:
