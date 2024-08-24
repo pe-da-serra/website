@@ -37,7 +37,7 @@
           /> -->
           <v-card border class="h-">
             <v-card-text class="my-5">
-              <p class="text-body-1 font-weight-bold">Reserve antes que esgote!</p>
+              <p class="text-body-1 font-weight-bold">Reserve antes que esgote</p>
               <p class="text-subtitle-2 font-weight-light">A reserva online é fácil, rápida e segura.</p>
               <v-btn
                 color="primary"
