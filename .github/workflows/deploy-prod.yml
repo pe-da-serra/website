@@ -15,6 +15,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
   deploy:
     runs-on: ubuntu-latest
 
