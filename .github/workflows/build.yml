@@ -25,9 +25,9 @@ jobs:
       run: npm ci
 
     - name: Build
-        env:
-          VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
-          VITE_HOTEL_ID: ${{ vars.HOTEL_ID }}
+      env:
+        VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+        VITE_HOTEL_ID: ${{ vars.HOTEL_ID }}
       run: npm run build
 
     - name: Upload compiled website
