@@ -1,0 +1,35 @@
+name: '[Prod] Deploy'
+on:
+  push:
+    tags:
+      - 'v**'
+  workflow_dispatch:
+
+# Sets the GITHUB_TOKEN permissions
+permissions:
+  contents: read
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'deploy-prod'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download compiled website
+      uses: actions/download-artifact@v4
+      with:
+        name: dist
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        run-id: ${{ github.event.workflow_run.id }}
+
+    - name: FTP Deploy Locaweb
+      uses: locaweb/ftp-deploy@1.0.0
+      with:
+        host: ${{ vars.FTP_SERVER }} 
+        user: ${{ vars.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        localDir: "dist"
