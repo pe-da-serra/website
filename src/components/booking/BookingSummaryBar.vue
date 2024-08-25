@@ -20,7 +20,7 @@
           color="primary"
           variant="flat"
           rounded size="large"
-          @click="nextStep"
+          @click="nextPage"
           :loading="isNextStepLoading"
           :disabled="isNextStepLoading"
         >
@@ -58,4 +58,9 @@ withDefaults(defineProps<{ hideButton?: boolean }>(), {
 
 const { smAndDown } = useDisplay();
 const { page, selectedRooms, totalAmount, checkin, checkout, isNextStepLoading, nextStep } = useBooking();
+
+const nextPage = () => {
+  window.scrollTo(0, 0);
+  nextStep();
+}
 </script>

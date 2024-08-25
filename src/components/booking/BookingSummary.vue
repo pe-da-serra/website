@@ -107,6 +107,7 @@ const formattedCheckin = useDateFormat(checkin, formatter);
 const formattedCheckout = useDateFormat(checkout, formatter);
 
 const nextPage = () => {
+  window.scrollTo(0, 0);
   nextStep();
   model.value = false;
 }
