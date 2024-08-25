@@ -1,7 +1,7 @@
 name: '[Demo] Deploy'
 on:
   push:
-    branch:
+    branches:
       - 'booking'
   workflow_dispatch:
 
