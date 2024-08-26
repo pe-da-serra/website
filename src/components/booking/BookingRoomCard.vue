@@ -103,7 +103,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 const props = defineProps<{room: Room, roomRates: RoomAvailability, checkin: DateTime, checkout: DateTime }>();
 
-const { xs, smAndUp } = useDisplay();
+const { xs, smAndUp, mobile } = useDisplay();
 
 const totalGuests = ref<number>(props.room.capacity);
 const totalRooms = ref<number>(1);
@@ -161,9 +161,9 @@ const addRoom = () => {
 
   totalGuests.value = props.room.capacity;
   totalRooms.value = 1;
+
+  if (!mobile.value) {
+    window.scrollTo(0, 0);
+  }
 };
 </script>
-
-<style scoped>
-
-</style>
