@@ -95,14 +95,13 @@
 <script setup lang="ts">
 import NumberSelect from '@/components/NumberSelect.vue';
 import { useBooking } from '@/features/booking';
-import { Room, RoomRates } from '@/features/booking.types';
-import { intervalDates } from '@/features/date';
+import { Room, RoomAvailability, RoomRate } from '@/features/booking.types';
 import { DateTime } from 'luxon';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 
-const props = defineProps<{room: Room, roomRates: RoomRates, checkin: DateTime, checkout: DateTime }>();
+const props = defineProps<{room: Room, roomRates: RoomAvailability, checkin: DateTime, checkout: DateTime }>();
 
 const { xs, smAndUp } = useDisplay();
 
@@ -125,35 +124,18 @@ const photos = computed(() => {
 const nightsNumber = computed(() => props.checkout.diff(props.checkin, 'days').days);
 
 const minPrice = computed(() => {
-  let price = props.roomRates.ratePlans.reduce((acc, rp) => {
-    const rate = rp.rates.find(r => r.guests === totalGuests.value);
-    if (!rate) {
-      return acc;
-    }
-
-    return acc + rate.price;
-  }, 0);
+  let price = props.roomRates.ratePlans
+      .reduce((acc, rp) => {
+        acc.push(...rp.rates);
+        return acc;
+      }, [] as RoomRate[])
+      .filter(rate => rate.guests >= props.room.capacity)
+      .reduce((acc, rate) => Math.min(acc, rate.price), Infinity);
 
   return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 });
 
-const pricePerRoom = computed(() => {
-  const dates = intervalDates(props.checkin, props.checkout);
-  // from all dates, get the price for the selected guests. if not found for the exact number of guests get the price for the closest upper guest number
-
-  return dates.reduce((acc, date) => {
-    const dateRates = props.roomRates.ratePlans[0].rates.filter(r => r.date === date.toISODate());
-    if (dateRates.length === 0) {
-      return acc;
-    }
-
-    const price = dateRates.find(r => r.guests === totalGuests.value)?.price ?? 0;
-
-    acc += price;
-
-    return acc;
-  }, 0);
-});
+const pricePerRoom = computed(() => props.roomRates.ratePlans[0].pricePerOccupancy[totalGuests.value]);
 
 const isSoldOut = computed(() => props.roomRates.availableRooms === 0 || (props.roomRates.ratePlans[0]?.rates.length ?? 0) === 0);
 

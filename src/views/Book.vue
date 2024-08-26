@@ -68,7 +68,7 @@
             </div>
             <div v-else>
               <BookingRoomCard
-                v-for="roomRates in searchResult"
+                v-for="roomRates in results"
                 :key="roomRates.roomTypeId"
                 :room-rates="roomRates"
                 :room="roomFromRate(roomRates)"
@@ -100,7 +100,7 @@ import BookingPaymentForm from '@/components/booking/BookingPaymentForm.vue';
 import BookingSummary from '@/components/booking/BookingSummary.vue';
 import BookingRoomCard from '@/components/booking/BookingRoomCard.vue';
 import { useBooking, useSearch, useRooms } from '@/features/booking';
-import { Room, RoomRates, BookingPage } from '@/features/booking.types';
+import { Room, RoomAvailability, BookingPage } from '@/features/booking.types';
 import { DateTime } from 'luxon';
 import { ref, toRef, watchEffect, computed } from 'vue';
 import { useDisplay } from 'vuetify';
@@ -129,7 +129,10 @@ const { searchResult, searchError, isLoadingSearch, searchHasError } = useSearch
 const { rooms, roomsError, isLoadingRooms, roomsHasError } = useRooms();
 const isLoading = computed(() => isLoadingSearch.value || isLoadingRooms.value);
 
-function roomFromRate(roomRates: RoomRates): Room {
+const results = computed(() =>[...(searchResult.value ?? [])]
+  .sort((a, b) => roomFromRate(a).capacity - roomFromRate(b).capacity));
+
+function roomFromRate(roomRates: RoomAvailability): Room {
   const room = rooms.value?.find(room => room.id === roomRates.roomTypeId);
 
   if (!room) {

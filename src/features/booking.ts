@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { DateTime } from "luxon";
 import { Ref, computed, ref } from "vue";
-import { BookingPage, Payment, PaymentMethod, Person, Room, RoomRates, RoomTypeBooking } from "./booking.types";
+import { BookingPage, Payment, PaymentMethod, Person, Room, RoomAvailability, RoomTypeBooking } from "./booking.types";
 import { http } from "./http";
 import { VForm } from "vuetify/components";
 import { useDateFormat, useStorageAsync } from "@vueuse/core";
@@ -237,8 +237,8 @@ export const summaryButtonText = (page: BookingPage) => {
   return '';
 }
 
-const fetchSearch = async (checkin: DateTime, checkout: DateTime): Promise<RoomRates[]> => {
-  const response = await http.get<RoomRates[]>(`/public/hotels/${hotelId}/search`, {
+const fetchSearch = async (checkin: DateTime, checkout: DateTime): Promise<RoomAvailability[]> => {
+  const response = await http.get<RoomAvailability[]>(`/public/hotels/${hotelId}/search`, {
     params: {
       checkin: checkin.toISODate(),
       checkout: checkout.toISODate(),

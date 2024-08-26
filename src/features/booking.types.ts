@@ -39,20 +39,23 @@ export type Room = {
   photos: string[],
 }
 
-export type RoomRates = {
+export type RoomAvailability = {
   roomTypeId: string,
   availableRooms: number,
   checkin: string,
   checkout: string,
   ratePlans: {
     ratePlanId: string,
-    rates: {
-      date: string,
-      guests: number,
-      price: number,
-    }[],
+    rates: RoomRate[],
+    pricePerOccupancy: { [key: number]: number }
   }[],
 };
+
+export type RoomRate = {
+  date: string,
+  guests: number,
+  price: number,
+}
 
 export type RoomTypeBooking = {
   roomId: string,
