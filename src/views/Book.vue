@@ -129,8 +129,12 @@ const { searchResult, searchError, isLoadingSearch, searchHasError } = useSearch
 const { rooms, roomsError, isLoadingRooms, roomsHasError } = useRooms();
 const isLoading = computed(() => isLoadingSearch.value || isLoadingRooms.value);
 
-const results = computed(() =>[...(searchResult.value ?? [])]
-  .sort((a, b) => roomFromRate(a).capacity - roomFromRate(b).capacity));
+const results = computed(() => [...(searchResult.value ?? [])]
+  .sort((a, b) => roomFromRate(a).capacity - roomFromRate(b).capacity)
+  .sort((a, b) => soldOut(a) ? 1 : soldOut(b) ? -1 : 0)
+);
+
+const soldOut = (ra: RoomAvailability) => ra.availableRooms === 0 || (ra.ratePlans[0]?.rates.length ?? 0) === 0;
 
 function roomFromRate(roomRates: RoomAvailability): Room {
   const room = rooms.value?.find(room => room.id === roomRates.roomTypeId);
