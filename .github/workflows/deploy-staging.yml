@@ -2,7 +2,7 @@ name: '[Demo] Deploy'
 on:
   push:
     branches:
-      - 'booking'
+      - 'main'
   workflow_dispatch:
 
 # Allow one concurrent deployment
