@@ -17,7 +17,7 @@
       </v-app-bar-title>
 
       <template v-slot:append>
-        <v-btn v-if="!mobile" variant="elevated" color="primary">
+        <v-btn v-if="!mobile" variant="elevated" color="primary" to="/reserva">
           <v-icon start>mdi-calendar-check</v-icon>
           Reservar
         </v-btn>
