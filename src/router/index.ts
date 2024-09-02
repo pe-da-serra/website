@@ -1,5 +1,7 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { fromIsoDate, useToday } from '@/features/date';
+import { BookProps } from '@/views/Book.vue';
+import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
 export const routeNames = {
   home: 'Home',
@@ -7,6 +9,8 @@ export const routeNames = {
   rooms: 'Rooms',
   photos: 'Photos',
   contact: 'Contact',
+  book: 'Book',
+  bookPayment: 'BookPayment',
   room: {
     single: 'SingleRoom',
     couple: 'CoupleRoom',
@@ -25,10 +29,17 @@ export const menuRoutes = [
   { title: 'Contato', route: routeNames.contact, icon: 'mdi-phone-outline' },
 ]
 
-export const routes = [
+const parseBookRoute = (route: RouteLocationNormalized): BookProps => {
+  return {
+    checkIn: fromIsoDate(route.query.checkin as string),
+    checkOut: fromIsoDate(route.query.checkout as string),
+  };
+}
+
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/layouts/Default.vue'),
+    component: () => import('@/layouts/DefaultLayout.vue'),
     children: [
       {
         path: '',
@@ -88,9 +99,41 @@ export const routes = [
         name: routeNames.room.apartment,
         component: () => import(/* webpackChunkName: "rooms-apartment" */ '@/views/rooms/Apartment.vue'),
       },
+      {
+        path: '/pagamento/:paymentId',
+        name: routeNames.bookPayment,
+        component: () => import('@/views/booking/Payment.vue'),
+        props: true,
+      },
     ],
   },
-]
+  {
+    path: '/reserva',
+    component: () => import('@/layouts/BookLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: routeNames.book,
+        component: () => import('@/views/Book.vue'),
+        props: parseBookRoute,
+        beforeEnter: (to, from, next) => {
+          const today = useToday();
+
+          if (!fromIsoDate(to.query.checkin as string).isValid ||
+           !fromIsoDate(to.query.checkout as string).isValid) {
+            console.error('Invalid book query params')
+            to.query.checkin = today.toISODate();
+            to.query.checkout = today.plus({ days: 1 }).toISODate();
+            next(to);
+          }
+
+          next();
+          return true;
+        }
+      },
+    ],
+  },
+];
 
 export const routerOptions = {
   routes,

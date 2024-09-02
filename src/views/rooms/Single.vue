@@ -47,8 +47,7 @@
                 prepend-icon="mdi-calendar-clock"
                 text="Reservar"
                 class="mt-4"
-                :href="bookingUrl({ room: RoomType.Single, })"
-                target="_blank"
+                to="/reserva"
               />
               <v-divider class="my-7"/>
               <v-btn variant="outlined" icon="mdi-whatsapp" class="mr-5"/>
@@ -82,6 +81,4 @@ import img4 from "@/assets/single-4.jpg";
 import img5 from "@/assets/single-5.jpg";
 
 const images = [img1, img2, img3, img4, img5];
-
-import { bookingUrl, RoomType } from '@/features/booking';
 </script>

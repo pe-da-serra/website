@@ -1,7 +1,6 @@
 {
   "name": "pe-da-serra",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
@@ -9,8 +8,15 @@
     "lint": "eslint . --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@date-io/luxon": "^3.0.0",
     "@mdi/font": "7.0.96",
+    "@tanstack/vue-query": "^5.28.9",
+    "@vueuse/core": "^10.9.0",
     "@vueuse/head": "^2.0.0",
+    "axios": "^1.6.8",
+    "luxon": "^3.4.4",
+    "maska": "^2.1.11",
+    "qrcode": "^1.5.3",
     "roboto-fontface": "*",
     "vue": "^3.2.0",
     "vue-router": "^4.0.0",
@@ -19,7 +25,10 @@
   },
   "devDependencies": {
     "@babel/types": "^7.21.4",
+    "@tanstack/vue-query-devtools": "^5.28.10",
+    "@types/luxon": "^3.4.2",
     "@types/node": "^18.15.0",
+    "@types/qrcode": "^1.5.5",
     "@types/webfontloader": "^1.6.35",
     "@unhead/vue": "^1.8.9",
     "@vitejs/plugin-vue": "^4.0.0",

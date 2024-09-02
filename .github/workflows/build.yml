@@ -1,9 +1,15 @@
 name: Build
 on:
   workflow_call:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: string
 
 jobs:
   build:
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +25,9 @@ jobs:
       run: npm ci
 
     - name: Build
+      env:
+        VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+        VITE_HOTEL_ID: ${{ vars.HOTEL_ID }}
       run: npm run build
 
     - name: Upload compiled website

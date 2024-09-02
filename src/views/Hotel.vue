@@ -95,8 +95,7 @@
         prepend-icon="mdi-calendar-clock"
         text="Reservar"
         class="mt-8"
-        :href="bookingUrl()"
-        target="_blank"
+        to="/reserva"
       />
     </v-col>
   </v-row>
@@ -117,7 +116,6 @@ useHead({
 import { lazyImg } from '@/features/image';
 import hotel1 from '@/assets/hotel-1.jpg';
 import hotel2 from '@/assets/hotel-2.jpg';
-import { bookingUrl } from '@/features/booking';
 
 const images = [ hotel1, hotel2 ];
 

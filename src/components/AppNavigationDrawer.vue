@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { bookingUrl } from '@/features/booking';
+import { bookingUrl } from '@/features/booking.old';
 import { routeNames, menuRoutes } from '@/router';
 
 defineProps(['value']);

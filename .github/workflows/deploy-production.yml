@@ -13,6 +13,8 @@ concurrency:
 jobs:
   build:
     uses: ./.github/workflows/build.yml
+    with:
+      environment: production
 
   deploy:
     needs: build
@@ -29,7 +31,7 @@ jobs:
     - name: FTP Deploy Locaweb
       uses: locaweb/ftp-deploy@1.0.0
       with:
-        host: ${{ vars.FTP_SERVER }} 
+        host: ${{ vars.FTP_SERVER }}
         user: ${{ vars.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         localDir: "dist"
