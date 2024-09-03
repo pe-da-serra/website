@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 // Plugins
 import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
@@ -8,19 +9,21 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue({
-      template: { transformAssetUrls },
-      script: {
-        defineModel: true
-      },
-    }),
-    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-    vuetify({
-      autoImport: true,
-    }),
-  ],
+  plugins: [vue({
+    template: { transformAssetUrls },
+    script: {
+      defineModel: true
+    },
+  }), // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
+  vuetify({
+    autoImport: true,
+  }), sentryVitePlugin({
+    org: "reserve-ja",
+    project: "pe-da-serra"
+  })],
+
   define: { 'process.env': {} },
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -35,10 +38,16 @@ export default defineConfig({
       '.vue',
     ],
   },
+
   server: {
     port: 3000,
   },
+
   ssr: {
     noExternal: ['vuetify'],
   },
+
+  build: {
+    sourcemap: true
+  }
 })
