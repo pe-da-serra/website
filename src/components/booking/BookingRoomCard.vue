@@ -48,11 +48,11 @@
         <v-card-subtitle>
           <span>{{ subtitle }}</span>
           <span
-            v-if="props.roomRates.availableRooms < 4 && props.roomRates.availableRooms > 0"
+            v-if="props.roomRates.availableRooms < 4 && !isSoldOut"
             class="mx-1"
           >•</span>
           <span
-            v-if="props.roomRates.availableRooms < 4 && props.roomRates.availableRooms > 0"
+            v-if="props.roomRates.availableRooms < 4 && !isSoldOut"
             class="text-error font-weight-bold"
           >Restam {{ props.roomRates.availableRooms }} quartos!</span>
         </v-card-subtitle>
