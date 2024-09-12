@@ -67,6 +67,17 @@
               <pre>{{ roomsError }}</pre>
             </div>
             <div v-else>
+              <v-alert
+                color="primary"
+                icon="mdi-currency-usd"
+                title="Menor preço garantido"
+                text="Aproveite nossas melhores tarifas reservando pelo site!"
+                border="start"
+                variant="tonal"
+                prominent
+                closable
+                class="mb-4"
+              />
               <BookingRoomCard
                 v-for="roomRates in results"
                 :key="roomRates.roomTypeId"
