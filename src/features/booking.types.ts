@@ -21,6 +21,7 @@ export type Payment = {
 export type PaymentData = {
   pixCode?: string,
   expiration?: string,
+  clientSecret?: string,
 }
 
 export type Person = {

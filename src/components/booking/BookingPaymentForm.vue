@@ -69,6 +69,7 @@
           <v-col cols="12">
             <v-radio-group v-model="booking.paymentMethod.value">
               <v-radio label="Pix" value="Pix"></v-radio>
+              <v-radio label="Cartão de Crédito" value="CreditCard"></v-radio>
             </v-radio-group>
           </v-col>
         </v-row>
@@ -87,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { useBooking, usePreBook } from '@/features/booking';
+import { useBooking } from '@/features/booking';
 import { documentMask, phoneMask } from '@/features/mask';
 import { validateDocument, validateEmail, validateName, validatePhone } from '@/features/validation';
 import { ref } from 'vue';
@@ -104,7 +105,7 @@ function toggleRepeatGuestData(newValue: boolean|null): void {
   booking.payer.value = { fullName: '', email: '', phone: '', document: '' };
 }
 
-const preBook = usePreBook();
+// const preBook = usePreBook();
 // async function nextStep(event: SubmitEventPromise) {
 //   const result = await event;
 //   if (!result.valid) {
