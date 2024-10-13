@@ -42,14 +42,25 @@
       </v-row>
     </v-container>
     <v-card-text v-else-if="payment?.status === 'Requested'">
-      <div id="stripe-element">
+      <v-row>
+        <v-col>
+          <div id="stripe-element">
+          </div>
+        </v-col>
+      </v-row>
+      <div class="mt-4 mx-2">
+        <v-spacer />
+        <v-btn color="primary" variant="elevated" @click="pay" size="large" block>
+          Pagar
+        </v-btn>
+        <v-spacer />
       </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { usePayment } from '@/features/booking';
 
 const props = defineProps<{
@@ -57,20 +68,44 @@ const props = defineProps<{
 }>();
 
 const paymentId = computed(() => props.paymentId);
-const { payment, isLoadingPayment } = usePayment(paymentId);
+const { payment, isLoadingPayment, refetchPayment } = usePayment(paymentId);
+import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 
 const clientSecret = computed(() => payment.value?.additionalInformation?.clientSecret!);
 
-// const refetchTimer = setInterval(() => {
-//   if (payment.value?.status === 'Paid' || payment.value?.status === 'Canceled') {
-//     clearInterval(refetchTimer);
-//     return;
-//   }
+let stripe : Stripe | null;
+let elements : StripeElements | undefined;
 
-//   refetchPayment();
-// }, 10_000);
+onMounted(async () => {
+  stripe = await loadStripe('pk_test_51Pz1fkJKqswI6ykHNRpkTBqnqfSqSj4CvZRdqgcwumsRUmMhHMOi1MAWHZuAp9Ln6L1EbdUshBJgt2sxGw0up5XW000PuP288t');
+  const appearance = { /* appearance */ };
+  const options = { /* options */ };
+  elements = stripe?.elements({ clientSecret: clientSecret.value, appearance });
+  const paymentElement = elements?.create('payment', options);
+  paymentElement?.mount('#stripe-element');
+});
 
-// onUnmounted(() => {
-//   clearInterval(refetchTimer);
-// });
+const pay = async () => {
+  var result = await stripe?.confirmPayment({
+    elements: elements!,
+    confirmParams: {
+      return_url: window.location.href,
+    }
+  });
+  console.log(result);
+}
+
+
+const refetchTimer = setInterval(() => {
+  if (payment.value?.status === 'Paid' || payment.value?.status === 'Canceled') {
+    clearInterval(refetchTimer);
+    return;
+  }
+
+  refetchPayment();
+}, 10_000);
+
+onUnmounted(() => {
+  clearInterval(refetchTimer);
+});
 </script>

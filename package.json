@@ -12,6 +12,7 @@
     "@mdi/font": "7.0.96",
     "@sentry/vite-plugin": "^2.22.3",
     "@sentry/vue": "^8.27.0",
+    "@stripe/stripe-js": "^4.8.0",
     "@tanstack/vue-query": "^5.28.9",
     "@vueuse/core": "^10.9.0",
     "@vueuse/head": "^2.0.0",
