@@ -10,6 +10,7 @@ import sentry from './sentry'
 import vuetify from './vuetify'
 import router from '../router'
 import tanstack from './tanstack'
+import analytics from './analytics'
 
 // Types
 import type { App } from 'vue'
@@ -21,4 +22,5 @@ export function registerPlugins (app: App) {
     .use(vuetify)
     .use(router)
     .use(tanstack)
+    .use(analytics)
 }
