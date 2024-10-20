@@ -5,13 +5,15 @@ export enum BookingPage {
   // PixForm,
 }
 
-export type PaymentMethod = 'Pix';
+export type GatewayType = 'Unknown' | 'ApiPix' | 'MockPix' | 'OpenPix' | 'Stripe';
+export type PaymentMethod = 'Pix' | 'CreditCard';
 export type PaymentStatus = 'Requested' | 'Paid' | 'Canceled' | 'Refunded';
 
 export type Payment = {
   id: string,
   bookingId: string,
   amount: number,
+  gatewayType: GatewayType,
   method: PaymentMethod,
   status: PaymentStatus,
   additionalInformation: PaymentData,
@@ -21,6 +23,7 @@ export type Payment = {
 export type PaymentData = {
   pixCode?: string,
   expiration?: string,
+  clientSecret?: string,
 }
 
 export type Person = {
