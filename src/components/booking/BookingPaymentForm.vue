@@ -17,8 +17,8 @@
               flat
               hover
               link
-              :variant="booking.paymentMethod.value == 'Pix' ? 'tonal' : null"
-              :color="booking.paymentMethod.value == 'Pix' ? 'primary' : null"
+              :variant="booking.paymentMethod.value == 'Pix' ? 'tonal' : undefined"
+              :color="booking.paymentMethod.value == 'Pix' ? 'primary' : undefined"
               @click="booking.paymentMethod.value = 'Pix'"
             >
               <template #text>
@@ -42,8 +42,8 @@
               hover
               link
               class="ml-3"
-              :variant="booking.paymentMethod.value == 'CreditCard' ? 'tonal' : null"
-              :color="booking.paymentMethod.value == 'CreditCard' ? 'primary' : null"
+              :variant="booking.paymentMethod.value == 'CreditCard' ? 'tonal' : undefined"
+              :color="booking.paymentMethod.value == 'CreditCard' ? 'primary' : undefined"
               @click="booking.paymentMethod.value = 'CreditCard'"
             >
               <template #text>
