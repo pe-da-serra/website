@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" class="py-4">
-    <v-col md="10" xl="7" class="mx-4 d-flex h-100">
+    <v-col md="5" class="mx-4 d-flex h-100">
       <v-row>
         <v-col>
           <div v-if="isLoadingPayment">Carregando...</div>
