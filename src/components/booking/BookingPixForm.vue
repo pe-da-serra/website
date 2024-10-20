@@ -44,7 +44,7 @@
             <v-icon color="success" size="x-large">mdi-check-circle</v-icon>
           </h1>
           <h1 class="py-2">Pagamento efetuado!</h1>
-          <p>Você receberá em instates um email com a confirmação da reserva.</p>
+          <p>Você receberá em instantes um email com a confirmação da reserva.</p>
         </v-col>
       </v-row>
     </v-container>
