@@ -77,7 +77,8 @@ let stripe : Stripe | null;
 let elements : StripeElements | undefined;
 
 onMounted(async () => {
-  stripe = await loadStripe('pk_test_51Pz1fkJKqswI6ykHNRpkTBqnqfSqSj4CvZRdqgcwumsRUmMhHMOi1MAWHZuAp9Ln6L1EbdUshBJgt2sxGw0up5XW000PuP288t');
+  const publicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+  stripe = await loadStripe(publicKey);
   const appearance = { /* appearance */ };
   const options = { /* options */ };
   elements = stripe?.elements({ clientSecret: clientSecret.value, appearance });
