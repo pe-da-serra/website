@@ -36,6 +36,7 @@ export const reset = () => {
 
 export function useBooking() {
   const { rooms } = useRooms();
+  const analytics = useAnalytics();
 
   const summaryList = computed(() => {
     if (!rooms.value) return [];
@@ -58,7 +59,7 @@ export function useBooking() {
   );
 
   function selectRoom(room: RoomTypeBooking, checkinDate: Date, checkoutDate: Date) {
-    useAnalytics().capture("room selected", {
+    analytics.capture("room selected", {
       roomId: room.roomId,
       guestsPerRoom: room.guestsPerRoom,
       totalRooms: room.totalRooms,
@@ -79,7 +80,7 @@ export function useBooking() {
   }
 
   function removeRoom(roomId: string, guestsPerRoom: number) {
-    useAnalytics().capture("room removed", {
+    analytics.capture("room removed", {
       roomId: roomId,
       guestsPerRoom: guestsPerRoom,
     });
@@ -99,10 +100,10 @@ export function useBooking() {
   const preBookAction = usePreBook();
   async function nextStep() {
     if (page.value === BookingPage.Search) {
-      useAnalytics().capture("next step: go to guest form");
+      analytics.capture("next step: go to guest form");
       page.value = BookingPage.GuestForm;
     } else if (page.value === BookingPage.GuestForm) {
-      useAnalytics().capture("next step: go to payment form");
+      analytics.capture("next step: go to payment form");
       const result = await guestForm.value?.validate();
       if (result?.valid) {
         payer.value = { ...mainGuest.value };
@@ -111,7 +112,7 @@ export function useBooking() {
     } else if (page.value === BookingPage.PaymentForm) {
       const result = await paymentForm.value?.validate();
       if (result?.valid) {
-        useAnalytics().capture("next step: prebook")
+        analytics.capture("next step: prebook")
         await preBookAction.mutateAsync();
         // page.value = BookingPage.PixForm;
       }
