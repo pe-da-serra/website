@@ -1,6 +1,8 @@
 // Composables
+import { useAnalytics } from '@/features/analytics';
 import { fromIsoDate, useToday } from '@/features/date';
 import { BookProps } from '@/views/Book.vue';
+import { nextTick } from 'vue';
 import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
 export const routeNames = {
@@ -147,3 +149,13 @@ export const routerOptions = {
 const router = createRouter(routerOptions);
 
 export default router
+
+router.afterEach((to, from, failure) => {
+  const analytics = useAnalytics();
+  if (!failure) {
+    nextTick(() => {
+      analytics.capture('$pageleave', { $current_url: window.location.host + from.fullPath, path: from.fullPath });
+      analytics.capture('$pageview', { path: to.fullPath });
+    });
+  }
+});

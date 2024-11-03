@@ -7,6 +7,7 @@ import { VForm } from "vuetify/components";
 import { useDateFormat, useStorageAsync } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/router";
+import { useAnalytics } from "./analytics";
 
 const hotelId = import.meta.env.VITE_HOTEL_ID;
 
@@ -57,6 +58,13 @@ export function useBooking() {
   );
 
   function selectRoom(room: RoomTypeBooking, checkinDate: Date, checkoutDate: Date) {
+    useAnalytics().capture("room selected", {
+      roomId: room.roomId,
+      guestsPerRoom: room.guestsPerRoom,
+      totalRooms: room.totalRooms,
+      checkin: checkinDate.toISOString(),
+      checkout: checkoutDate.toISOString(),
+    });
     checkin.value = checkinDate;
     checkout.value = checkoutDate;
     ratePlanId.value = room.ratePlanId;
@@ -71,6 +79,11 @@ export function useBooking() {
   }
 
   function removeRoom(roomId: string, guestsPerRoom: number) {
+    useAnalytics().capture("room removed", {
+      roomId: roomId,
+      guestsPerRoom: guestsPerRoom,
+    });
+
     // remove room from selectedRooms
     const index = selectedRooms.value.findIndex(r => r.roomId === roomId && r.guestsPerRoom === guestsPerRoom);
     if (index >= 0) {
@@ -86,8 +99,10 @@ export function useBooking() {
   const preBookAction = usePreBook();
   async function nextStep() {
     if (page.value === BookingPage.Search) {
+      useAnalytics().capture("next step: go to guest form");
       page.value = BookingPage.GuestForm;
     } else if (page.value === BookingPage.GuestForm) {
+      useAnalytics().capture("next step: go to payment form");
       const result = await guestForm.value?.validate();
       if (result?.valid) {
         payer.value = { ...mainGuest.value };
@@ -96,7 +111,7 @@ export function useBooking() {
     } else if (page.value === BookingPage.PaymentForm) {
       const result = await paymentForm.value?.validate();
       if (result?.valid) {
-
+        useAnalytics().capture("next step: prebook")
         await preBookAction.mutateAsync();
         // page.value = BookingPage.PixForm;
       }
@@ -155,9 +170,15 @@ export function useBooking() {
 }
 
 export const useSearch = (checkin: Ref<DateTime>, checkout: Ref<DateTime>) => {
+  const analytics = useAnalytics();
+
   const { data, error, isPending, isError } = useQuery({
     queryKey: ['search', checkin, checkout],
     queryFn: async () => {
+      analytics.capture("searched availability", {
+        checkin: checkin.value.toISODate(),
+        checkout: checkout.value.toISODate(),
+      });
       return await fetchSearch(checkin.value, checkout.value);
     },
   });

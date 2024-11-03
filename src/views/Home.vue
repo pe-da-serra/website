@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
 // Head
-import { useHead } from '@vueuse/head'
+import { useHead } from '@unhead/vue'
 useHead({
   title: 'Pé da Serra Hotel',
   meta: [
