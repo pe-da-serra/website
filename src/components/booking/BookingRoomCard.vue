@@ -89,7 +89,7 @@
     <div v-if="isSoldOut">
       <div class="d-flex align-end justify-end px-3 pb-3">
         <v-chip color="error" variant="tonal" rounded class="ml-2">
-          Esgotado
+          Indisponível
         </v-chip>
       </div>
     </div>
