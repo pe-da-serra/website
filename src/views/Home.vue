@@ -1,5 +1,27 @@
 <template>
-  <v-carousel
+  <v-img
+    :src="img7"
+    :lazy-src="lazyImg"
+    alt="Homepage banner"
+    cover
+    :height="carouselHeight"
+    class="hero-image"
+  >
+    <div class="hero-inside d-flex fill-height justify-center align-center">
+      <v-card class="mx-10 mb-15">
+        <v-card-text class="d-flex flex-column align-center justify-center text-center bg-background">
+          <p class="text-h4 font-weight-regular">Aspirantado AMAN</p>
+          <p class="text-h6 font-weight-light">22 a 24 de novembro</p>
+          <p class="text-h6 font-weight-medium text-secondary py-5">Últimas unidades disponíveis!</p>
+          <v-btn variant="outlined" :href="bookingUrl()" target="blank">
+            <v-icon start icon="mdi-whatsapp" />
+            Reservar por WhatsApp
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </div>
+  </v-img>
+  <!-- <v-carousel
     hide-delimiters
     :show-arrows="images.length > 1 ? 'hover' : false"
     touch
@@ -14,10 +36,10 @@
       alt="Homepage banner"
       cover
     />
-  </v-carousel>
+  </v-carousel> -->
   <v-row justify="center">
     <v-col md="7" lg="5" class="px-8 px-sm-0">
-      <v-card class="mx-16 pa-5" style="margin-top: -5.5rem;">
+      <v-card class="mx-16 pa-5" style="margin-top: -4.5rem;">
         <v-form>
           <v-row>
             <!-- <v-col cols="10" sm="4">
@@ -56,7 +78,7 @@
             block
             variant="flat"
             color="primary"
-            text="Reservar"
+            text="Reserva online"
             size="large"
             :to="`/reserva?checkin=${startDate.toISODate()}&checkout=${endDate.toISODate()}`"
           />
@@ -82,25 +104,28 @@ useHead({
 // Carousel
 import { useDisplay } from 'vuetify'
 const { smAndDown } = useDisplay()
-var carouselHeight = computed(() => (smAndDown.value ? '40vh' : '50vh'));
+var carouselHeight = computed(() => (smAndDown.value ? '60vh' : '50vh'));
 
 import { lazyImg } from '@/features/image';
-import img1 from '@/assets/region-1-lg.jpg';
-import img2 from '@/assets/region-2-lg.jpg';
-import img3 from '@/assets/region-3-lg.jpg';
-import img4 from '@/assets/region-4-lg.jpg';
-import img5 from '@/assets/region-5-lg.jpg';
+// import img1 from '@/assets/region-1-lg.jpg';
+// import img2 from '@/assets/region-2-lg.jpg';
+// import img3 from '@/assets/region-3-lg.jpg';
+// import img4 from '@/assets/region-4-lg.jpg';
+// import img5 from '@/assets/region-5-lg.jpg';
+// import img6 from '@/assets/espada-lg.jpg';
+import img7 from '@/assets/promo-1-lg.jpg';
 
-const images = [ img3, img4, img5 ];
+// const images = [ img6 ];
 
 // Booking form
 import { ref, computed } from 'vue';
-import NumberInput from '@/components/NumberInput.vue'
+// import NumberInput from '@/components/NumberInput.vue'
 import DateInput from '@/components/DateInput.vue';
 import { useToday, addDays } from '@/features/date';
 import { DateTime } from 'luxon';
+import { bookingUrl } from '@/features/booking.old';
 
-const guests = ref(2);
+// const guests = ref(2);
 const today = useToday();
 
 const startDate = ref<DateTime>(addDays(today, 1));
@@ -116,3 +141,20 @@ function updateEndDate(date: DateTime): void {
   endDate.value = date;
 }
 </script>
+
+<style lang="css">
+.hero-image {
+  position: relative;
+}
+.hero-image::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  filter: blur(8px) brightness(75%);
+}
+.hero-inside {
+  /* This will make it stack on top of the ::before */
+  position: relative;
+}
+</style>
