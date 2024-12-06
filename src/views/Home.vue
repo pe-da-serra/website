@@ -1,6 +1,6 @@
 <template>
   <v-img
-    :src="img7"
+    :src="img4"
     :lazy-src="lazyImg"
     alt="Homepage banner"
     cover
@@ -10,9 +10,7 @@
     <div class="hero-inside d-flex fill-height justify-center align-center">
       <v-card class="mx-10 mb-15">
         <v-card-text class="d-flex flex-column align-center justify-center text-center bg-background">
-          <p class="text-h4 font-weight-regular">Aspirantado AMAN</p>
-          <p class="text-h6 font-weight-light">22 a 24 de novembro</p>
-          <p class="text-h6 font-weight-medium text-secondary py-5">Últimas unidades disponíveis!</p>
+          <p class="text-h6 font-weight-medium text-secondary pb-5">O melhor custo benefício da região!</p>
           <v-btn variant="outlined" :href="bookingUrl()" target="blank">
             <v-icon start icon="mdi-whatsapp" />
             Reservar por WhatsApp
@@ -110,12 +108,10 @@ import { lazyImg } from '@/features/image';
 // import img1 from '@/assets/region-1-lg.jpg';
 // import img2 from '@/assets/region-2-lg.jpg';
 // import img3 from '@/assets/region-3-lg.jpg';
-// import img4 from '@/assets/region-4-lg.jpg';
+import img4 from '@/assets/region-4-lg.jpg';
 // import img5 from '@/assets/region-5-lg.jpg';
-// import img6 from '@/assets/espada-lg.jpg';
-import img7 from '@/assets/promo-1-lg.jpg';
 
-// const images = [ img6 ];
+// const images = [ img4, img5 ];
 
 // Booking form
 import { ref, computed } from 'vue';
