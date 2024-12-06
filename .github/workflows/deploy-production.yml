@@ -33,7 +33,7 @@ jobs:
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: 0f20863ce606a851a24e64d30dc8ec9c
-        projectName: 'pe-da-serra-demo'
+        projectName: 'pe-da-serra'
         directory: dist
 
     # - name: FTP Deploy Locaweb
