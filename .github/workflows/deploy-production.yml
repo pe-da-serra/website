@@ -28,10 +28,18 @@ jobs:
         name: dist
         path: dist
 
-    - name: FTP Deploy Locaweb
-      uses: locaweb/ftp-deploy@1.0.0
+    - name: Publish to Cloudflare Pages
+      uses: cloudflare/pages-action@v1
       with:
-        host: ${{ vars.FTP_SERVER }}
-        user: ${{ vars.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        localDir: "dist"
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: 0f20863ce606a851a24e64d30dc8ec9c
+        projectName: 'pe-da-serra-demo'
+        directory: dist
+
+    # - name: FTP Deploy Locaweb
+    #   uses: locaweb/ftp-deploy@1.0.0
+    #   with:
+    #     host: ${{ vars.FTP_SERVER }}
+    #     user: ${{ vars.FTP_USERNAME }}
+    #     password: ${{ secrets.FTP_PASSWORD }}
+    #     localDir: "dist"
