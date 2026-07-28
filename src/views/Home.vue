@@ -1,6 +1,6 @@
 <template>
   <v-img
-    :src="img4"
+    :src="img6"
     :lazy-src="lazyImg"
     alt="Homepage banner"
     cover
@@ -8,10 +8,10 @@
     class="hero-image"
   >
     <div class="hero-inside d-flex fill-height justify-center align-center">
-      <v-card class="mx-10 mb-15">
-        <v-card-text class="d-flex flex-column align-center justify-center text-center bg-background">
+      <v-card class="mx-10 mb-15" color="rgb(255, 255, 255, 0.4)" flat>
+        <v-card-text class="d-flex flex-column align-center justify-center text-center">
           <p class="text-h6 font-weight-medium text-secondary pb-5">O melhor custo benefício da região!</p>
-          <v-btn variant="outlined" :href="bookingUrl()" target="blank">
+          <v-btn color="white" :href="bookingUrl()" target="blank">
             <v-icon start icon="mdi-whatsapp" />
             Reservar por WhatsApp
           </v-btn>
@@ -108,8 +108,9 @@ import { lazyImg } from '@/features/image';
 // import img1 from '@/assets/region-1-lg.jpg';
 // import img2 from '@/assets/region-2-lg.jpg';
 // import img3 from '@/assets/region-3-lg.jpg';
-import img4 from '@/assets/region-4-lg.jpg';
+// import img4 from '@/assets/region-4-lg.jpg';
 // import img5 from '@/assets/region-5-lg.jpg';
+import img6 from '@/assets/region-6-lg.jpg';
 
 // const images = [ img4, img5 ];
 
