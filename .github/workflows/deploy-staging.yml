@@ -29,9 +29,8 @@ jobs:
         path: dist
 
     - name: Publish to Cloudflare Pages
-      uses: cloudflare/pages-action@v1
+      uses: cloudflare/wrangler-action@v4
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: 0f20863ce606a851a24e64d30dc8ec9c
-        projectName: 'pe-da-serra-demo'
-        directory: dist
+        command: pages deploy dist --project-name=pe-da-serra-demo
