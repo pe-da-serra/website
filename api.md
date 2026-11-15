@@ -86,3 +86,25 @@ Input:
 ```
 
 ## Response
+
+# Booking details
+
+`GET /public/hotels/{hotelId}/bookings/{bookingId}`
+
+`status`: `WaitingPreBook` | `PreBooked` | `Booked` | `Canceled`. `rooms` lists one room type id per booked room.
+
+```json
+{
+    "id": "0f8c2a5e-7d1b-4c3a-9e6f-2b4d8a1c5e7f",
+    "checkIn": "2024-04-20",
+    "checkOut": "2024-04-22",
+    "status": "Booked",
+    "rooms": [
+        "3a266b79-9e90-43a7-9ceb-338cbf8207cc",
+        "3a266b79-9e90-43a7-9ceb-338cbf8207cc",
+        "42e28016-41ad-41f6-8eb3-8d5e61298c1e"
+    ],
+    "price": 1000.00,
+    "guests": 4
+}
+```

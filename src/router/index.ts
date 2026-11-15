@@ -13,6 +13,7 @@ export const routeNames = {
   contact: 'Contact',
   book: 'Book',
   bookPayment: 'BookPayment',
+  bookSuccess: 'BookSuccess',
   room: {
     single: 'SingleRoom',
     couple: 'CoupleRoom',
@@ -101,12 +102,6 @@ export const routes: RouteRecordRaw[] = [
         name: routeNames.room.apartment,
         component: () => import(/* webpackChunkName: "rooms-apartment" */ '@/views/rooms/Apartment.vue'),
       },
-      {
-        path: '/pagamento/:paymentId',
-        name: routeNames.bookPayment,
-        component: () => import('@/views/booking/Payment.vue'),
-        props: true,
-      },
     ],
   },
   {
@@ -133,7 +128,30 @@ export const routes: RouteRecordRaw[] = [
           return true;
         }
       },
+      {
+        path: '/reserva/pagamento/:paymentId',
+        name: routeNames.bookPayment,
+        component: () => import('@/views/booking/Payment.vue'),
+        props: true,
+      },
+      {
+        path: '/reserva/sucesso',
+        name: routeNames.bookSuccess,
+        component: () => import('@/views/booking/Success.vue'),
+        props: route => ({ bookingId: route.query.bid as string }),
+        beforeEnter: (to) => {
+          if (typeof to.query.bid !== 'string' || to.query.bid === '') {
+            return { name: routeNames.home };
+          }
+          return true;
+        },
+      },
     ],
+  },
+  // Legacy payment URL, kept so previously shared links still work
+  {
+    path: '/pagamento/:paymentId',
+    redirect: to => ({ name: routeNames.bookPayment, params: { paymentId: to.params.paymentId } }),
   },
 ];
 

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { DateTime } from "luxon";
 import { Ref, computed, ref } from "vue";
-import { BookingPage, Payment, PaymentMethod, Person, Room, RoomAvailability, RoomTypeBooking } from "./booking.types";
+import { BookingDetails, BookingPage, BookingStatus, Payment, PaymentMethod, Person, Room, RoomAvailability, RoomTypeBooking } from "./booking.types";
 import { http } from "./http";
 import { VForm } from "vuetify/components";
 import { useDateFormat, useStorageAsync } from "@vueuse/core";
@@ -13,7 +13,7 @@ const hotelId = import.meta.env.VITE_HOTEL_ID;
 
 const checkin = useStorageAsync<Date>('checkin', null);
 const checkout = useStorageAsync<Date>('checkout', null);
-const page = useStorageAsync<BookingPage>('page', BookingPage.Search);
+const page = ref(BookingPage.Search);
 const mainGuest = useStorageAsync<Person>('main-guest', { fullName: '', email: '', phone: '', document: '' });
 const payer = useStorageAsync<Person>('payer', { fullName: '', email: '', phone: '', document: '' });
 const selectedRooms = useStorageAsync<RoomTypeBooking[]>('selected-rooms', []);
@@ -214,7 +214,10 @@ export const usePreBook = () => {
     mutationFn: preBook,
     onSuccess: (data) => {
       router.push({ name: routeNames.bookPayment, params: { paymentId: data.paymentId } })
-        .then(() => reset());
+        .then(() => {
+          reset();
+          page.value = BookingPage.Success;
+        });
     },
   });
 }
@@ -235,6 +238,44 @@ export const usePayment = (paymentId: Ref<string>) => {
     paymentIsError: isError,
     refetchPayment: refetch,
   };
+}
+
+const bookingPollIntervalMs = 3_000;
+const bookingMaxPolls = 40;
+
+export const isBookingProcessing = (status: BookingStatus | undefined) =>
+  status === 'WaitingPreBook' || status === 'PreBooked';
+
+export const useBookingDetails = (bookingId: Ref<string>) => {
+  const fetchCount = ref(0);
+  const { data, error, isPending, isError } = useQuery({
+    queryKey: ['booking', bookingId],
+    queryFn: async () => {
+      fetchCount.value++;
+      return await fetchBooking(bookingId.value);
+    },
+    // The booking may still be confirming right after the payment is marked as paid
+    refetchInterval: (query) =>
+      isBookingProcessing(query.state.data?.status) && fetchCount.value < bookingMaxPolls
+        ? bookingPollIntervalMs
+        : false,
+  });
+
+  const isProcessing = computed(() => isBookingProcessing(data.value?.status));
+  const processingTimedOut = computed(() => isProcessing.value && fetchCount.value >= bookingMaxPolls);
+
+  return {
+    booking: data,
+    isLoadingBooking: isPending,
+    bookingError: error,
+    bookingIsError: isError,
+    isBookingProcessing: isProcessing,
+    bookingProcessingTimedOut: processingTimedOut,
+  };
+}
+
+export const setPage = (newPage: BookingPage) => {
+  page.value = newPage;
 }
 
 const preBook = async () => {
@@ -276,6 +317,11 @@ const fetchRooms = async (): Promise<Room[]> => {
 
 const fetchPayment = async (paymentId: string): Promise<Payment> => {
   const response = await http.get<Payment>(`/public/payments/${paymentId}`);
+  return response.data;
+}
+
+const fetchBooking = async (bookingId: string): Promise<BookingDetails> => {
+  const response = await http.get(`/public/hotels/${hotelId}/bookings/${bookingId}`);
   return response.data;
 }
 

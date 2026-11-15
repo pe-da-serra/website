@@ -2,12 +2,24 @@ export enum BookingPage {
   Search,
   GuestForm,
   PaymentForm,
+  Success,
   // PixForm,
 }
 
 export type GatewayType = 'Unknown' | 'ApiPix' | 'MockPix' | 'OpenPix' | 'Stripe';
 export type PaymentMethod = 'Pix' | 'CreditCard';
 export type PaymentStatus = 'Requested' | 'Paid' | 'Canceled' | 'Refunded';
+export type BookingStatus = 'WaitingPreBook' | 'PreBooked' | 'Booked' | 'Canceled';
+
+export type BookingDetails = {
+  id: string,
+  checkIn: string,
+  checkOut: string,
+  status: BookingStatus,
+  rooms: string[],
+  price: number,
+  guests: number,
+}
 
 export type Payment = {
   id: string,

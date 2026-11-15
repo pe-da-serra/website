@@ -16,13 +16,26 @@
 <script setup lang="ts">
 import BookingPixForm from '@/components/booking/BookingPixForm.vue';
 import BookingStripeForm from '@/components/booking/BookingStripeForm.vue';
-import { usePayment } from '@/features/booking';
-import { computed } from 'vue';
+import { usePayment, setPage } from '@/features/booking';
+import { BookingPage } from '@/features/booking.types';
+import { routeNames } from '@/router';
+import { computed, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   paymentId: string,
 }>();
 const paymentId = computed(() => props.paymentId);
 
+setPage(BookingPage.Success);
+
+const router = useRouter();
 const { payment, isLoadingPayment } = usePayment(paymentId);
+
+// Payment forms poll the shared payment query, so this covers both Pix and Stripe
+watch(() => payment.value?.status, (status) => {
+  if (status === 'Paid' && payment.value) {
+    router.replace({ name: routeNames.bookSuccess, query: { bid: payment.value.bookingId } });
+  }
+}, { immediate: true });
 </script>

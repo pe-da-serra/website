@@ -140,6 +140,11 @@ const { mdAndUp } = useDisplay();
 
 const { page, selectedRooms } = useBooking();
 
+// Start a fresh search after a finished booking (page is left as Success)
+if (page.value === BookingPage.Success) {
+  page.value = BookingPage.Search;
+}
+
 watchEffect(() => {
   if (selectedRooms.value.length === 0) {
     summary.value = false;
