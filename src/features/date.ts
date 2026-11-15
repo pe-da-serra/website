@@ -14,6 +14,7 @@ export const addDays = (date: DateTime, days: number) => adapter.addDays(date, d
 
 export const toString = (date: DateTime|undefined) => date?.toFormat('dd/LL/yyyy', { locale: 'pt-BR' });
 export const toShortString = (date: DateTime|undefined) => date?.toFormat('dd LLL', { locale: 'pt-BR' });
+export const toLongString = (date: DateTime|undefined) => date?.toFormat(`dd 'de' LLLL 'de' yyyy`, { locale: 'pt-BR' });
 
 export const intervalDates = (checkin: DateTime, checkout: DateTime): DateTime[] =>
   Interval.fromDateTimes(checkin, checkout).splitBy({ day: 1 }).map(d => d.start!);
