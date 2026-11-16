@@ -121,7 +121,8 @@ import { BookingPage } from '@/features/booking.types';
 import { url } from '@/features/contact';
 import { fromIsoDate, toLongString } from '@/features/date';
 import { toMoney } from '@/features/money';
-import { computed } from 'vue';
+import { trackBookingConversion } from '@/features/googleAds';
+import { computed, watch } from 'vue';
 
 const props = defineProps<{
   bookingId: string
@@ -134,6 +135,12 @@ const { booking, isLoadingBooking, bookingIsError, isBookingProcessing, bookingP
 const { rooms, isLoadingRooms } = useRooms();
 
 const isLoading = computed(() => isLoadingBooking.value || isLoadingRooms.value);
+
+watch(() => booking.value?.status, (status) => {
+  if (status === 'Booked' && booking.value) {
+    trackBookingConversion(booking.value);
+  }
+}, { immediate: true });
 
 const roomName = (roomTypeId: string): string | undefined => {
   const room = rooms.value?.find(r => r.id === roomTypeId);

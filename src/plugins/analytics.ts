@@ -1,5 +1,6 @@
 import posthog from "posthog-js";
 import { App } from "vue";
+import { installGoogleAds } from "@/features/googleAds";
 
 export default {
   install(app: App) {
@@ -13,5 +14,7 @@ export default {
     );
 
     app.provide('posthog', posthogInstance);
+
+    installGoogleAds();
   },
 };
