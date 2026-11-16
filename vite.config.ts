@@ -4,8 +4,25 @@ import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // Utilities
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import type {} from 'vite-ssg'
+
+const clientRenderedPaths = ['/reserva', '/pagamento'];
+
+// vite-ssg overwrites index.html with the pre-rendered home page. Keep an empty
+// copy of the app shell for client-rendered routes (see public/_redirects).
+const spaShell = (): Plugin => ({
+  name: 'spa-shell',
+  apply: 'build',
+  enforce: 'post',
+  generateBundle(_, bundle) {
+    const index = bundle['index.html'];
+    if (index?.type === 'asset') {
+      this.emitFile({ type: 'asset', fileName: 'app.html', source: index.source });
+    }
+  },
+});
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +34,7 @@ export default defineConfig({
   }), // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
   vuetify({
     autoImport: true,
-  }), sentryVitePlugin({
+  }), spaShell(), sentryVitePlugin({
     org: "reserve-ja",
     project: "pe-da-serra"
   })],
@@ -49,5 +66,13 @@ export default defineConfig({
 
   build: {
     sourcemap: true
-  }
+  },
+
+  ssgOptions: {
+    formatting: 'minify',
+    // Only public marketing pages are pre-rendered. Booking pages depend on live
+    // availability and browser-only APIs, so they stay client-rendered.
+    includedRoutes: paths => [...new Set(paths.map(path => `/${path.replace(/^\//, '')}`))]
+      .filter(path => !clientRenderedPaths.some(prefix => path.startsWith(prefix))),
+  },
 })

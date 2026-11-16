@@ -3,7 +3,7 @@ import { useAnalytics } from '@/features/analytics';
 import { fromIsoDate, useToday } from '@/features/date';
 import { BookProps } from '@/views/Book.vue';
 import { nextTick } from 'vue';
-import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import { RouteLocationNormalized, RouteRecordRaw, Router, RouterScrollBehavior } from 'vue-router'
 
 export const routeNames = {
   home: 'Home',
@@ -155,25 +155,25 @@ export const routes: RouteRecordRaw[] = [
   },
 ];
 
-export const routerOptions = {
-  routes,
-  history: createWebHistory(process.env.BASE_URL),
-  scrollBehavior() {
-    // always scroll to top
-    return { top: 0, smooth: true }
-  },
+const scrollBehavior: RouterScrollBehavior = () => {
+  // always scroll to top
+  return { top: 0 }
 };
 
-const router = createRouter(routerOptions);
+export const routerOptions = {
+  routes,
+  base: import.meta.env.BASE_URL,
+  scrollBehavior,
+};
 
-export default router
-
-router.afterEach((to, from, failure) => {
-  const analytics = useAnalytics();
-  if (!failure) {
-    nextTick(() => {
-      analytics.capture('$pageleave', { $current_url: window.location.host + from.fullPath, path: from.fullPath });
-      analytics.capture('$pageview', { path: to.fullPath });
-    });
-  }
-});
+export function installRouterAnalytics(router: Router) {
+  router.afterEach((to, from, failure) => {
+    const analytics = useAnalytics();
+    if (!failure) {
+      nextTick(() => {
+        analytics.capture('$pageleave', { $current_url: window.location.host + from.fullPath, path: from.fullPath });
+        analytics.capture('$pageview', { path: to.fullPath });
+      });
+    }
+  });
+}

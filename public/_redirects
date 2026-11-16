@@ -1,0 +1,5 @@
+# Booking pages are not pre-rendered: serve the empty app shell so the
+# client renders them, instead of falling back to the pre-rendered home page.
+/reserva /app.html 200
+/reserva/* /app.html 200
+/pagamento/* /app.html 200

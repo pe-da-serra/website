@@ -6,22 +6,27 @@
 
 // Plugins
 import { loadFonts } from './webfontloader'
-import head from './head'
 import sentry from './sentry'
 import vuetify from './vuetify'
-import router from '../router'
 import tanstack from './tanstack'
 import analytics from './analytics'
+import { installRouterAnalytics } from '../router'
 
 // Types
-import type { App } from 'vue'
-export function registerPlugins (app: App) {
-  loadFonts()
+import type { ViteSSGContext } from 'vite-ssg'
+
+// Router and head are created by vite-ssg. Browser-only plugins are skipped
+// while pre-rendering pages at build time.
+export function registerPlugins ({ app, router, isClient }: ViteSSGContext) {
   app
-    .use(head)
-    .use(sentry)
     .use(vuetify)
-    .use(router)
     .use(tanstack)
-    .use(analytics);
+
+  if (isClient) {
+    loadFonts()
+    app
+      .use(sentry)
+      .use(analytics)
+    installRouterAnalytics(router)
+  }
 }
