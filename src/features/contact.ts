@@ -12,7 +12,7 @@ export const url = {
   email: `mailto:${email}`,
   whatsapp: `https://wa.me/55${keepOnlyNumbers(whatsapp)}`,
   phone: `tel:+55${keepOnlyNumbers(phone)}`,
-  instagram: "https://www.instagram.com",
+  instagram: "https://www.instagram.com/pedaserrahotel",
 }
 
 function keepOnlyNumbers(text: string) {
