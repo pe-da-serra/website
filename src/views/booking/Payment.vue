@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { useNoIndex } from '@/features/seo';
 import BookingPixForm from '@/components/booking/BookingPixForm.vue';
 import BookingStripeForm from '@/components/booking/BookingStripeForm.vue';
 import { usePayment, setPage } from '@/features/booking';
@@ -21,6 +22,8 @@ import { BookingPage } from '@/features/booking.types';
 import { routeNames } from '@/router';
 import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
+useNoIndex();
 
 const props = defineProps<{
   paymentId: string,

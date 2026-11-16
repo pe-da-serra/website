@@ -116,6 +116,7 @@
 </template>
 
 <script setup lang="ts">
+import { useNoIndex } from '@/features/seo';
 import { setPage, useBookingDetails, useRooms } from '@/features/booking';
 import { BookingPage } from '@/features/booking.types';
 import { url } from '@/features/contact';
@@ -123,6 +124,8 @@ import { fromIsoDate, toLongString } from '@/features/date';
 import { toMoney } from '@/features/money';
 import { trackBookingConversion } from '@/features/googleAds';
 import { computed, watch } from 'vue';
+
+useNoIndex();
 
 const props = defineProps<{
   bookingId: string

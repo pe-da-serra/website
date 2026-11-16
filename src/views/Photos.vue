@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" class="pt-3">
     <v-col cols="12" class="text-center bg-secondary py-10">
-      <p class="text-h3 font-weight-thin">GALERIA</p>
+      <h1 class="text-h3 font-weight-thin">GALERIA</h1>
       <v-divider length="100" thickness="2" color="white" class="mt-4 mx-auto border-opacity-75"></v-divider>
     </v-col>
   </v-row>
@@ -45,15 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@unhead/vue'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Galeria de fotos do hotel, quartos e região.',
-    },
-  ],
+import { usePageSeo } from '@/features/seo';
+usePageSeo({
+  title: 'Fotos do hotel, quartos e região | Pé da Serra Hotel',
+  description: 'Galeria de fotos do Pé da Serra Hotel em Resende (RJ): quartos, instalações e as belezas da região da Serra da Mantiqueira.',
+  path: '/galeria',
 });
 
 import { ref } from 'vue';

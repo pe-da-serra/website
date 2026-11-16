@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" class="pt-3">
     <v-col cols="12" class="text-center bg-secondary py-10">
-      <p class="text-h3 font-weight-thin">QUARTOS</p>
+      <h1 class="text-h3 font-weight-thin">QUARTOS</h1>
       <v-divider length="100" thickness="2" color="white" class="mt-4 mx-auto border-opacity-75"></v-divider>
     </v-col>
   </v-row>
@@ -24,15 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@unhead/vue'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Lista de quartos do hotel.',
-    },
-  ],
+import { usePageSeo } from '@/features/seo';
+usePageSeo({
+  title: 'Quartos | Pé da Serra Hotel em Resende, RJ',
+  description: 'Quartos de solteiro, casal, duplo e apartamento para até 4 hóspedes, com café da manhã, Wi-Fi e ar-condicionado. Veja fotos e reserve online.',
+  path: '/quartos',
 });
 
 import { ref } from 'vue';

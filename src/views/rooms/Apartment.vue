@@ -4,7 +4,7 @@
       <PhotoGallery :images="images" />
       <v-row class="px-8 px-sm-0 mt-1 mb-5" justify="center">
         <v-col cols="12" md="8">
-          <p class="text-h5 font-weight-medium">Apartamento</p >
+          <h1 class="text-h5 font-weight-medium">Apartamento</h1 >
           <p class="text-subtitle-1">4 hóspedes • 3 camas</p>
 
           <v-divider class="my-4"/>
@@ -61,15 +61,12 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@unhead/vue'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Quarto tipo apartamento.',
-    },
-  ],
+import { usePageSeo } from '@/features/seo';
+usePageSeo({
+  title: 'Apartamento para 4 pessoas | Pé da Serra Hotel em Resende, RJ',
+  description: 'Apartamento para até 4 hóspedes com 1 cama de casal e 2 de solteiro, banheiro privado, café da manhã, Wi-Fi e ar-condicionado. Reserve online.',
+  path: '/quartos/apartamento',
+  image: img1,
 });
 
 import PhotoGallery from '@/components/PhotoGallery.vue';

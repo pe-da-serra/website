@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" class="pt-3">
     <v-col cols="12" class="text-center bg-secondary py-10">
-      <p class="text-h3 font-weight-thin">O HOTEL</p>
+      <h1 class="text-h3 font-weight-thin">O HOTEL</h1>
       <v-divider length="100" thickness="2" color="white" class="mt-4 mx-auto border-opacity-75"></v-divider>
     </v-col>
   </v-row>
@@ -102,15 +102,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@unhead/vue'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Sobre o hotel e sua infraestrutura.',
-    },
-  ],
+import { usePageSeo } from '@/features/seo';
+usePageSeo({
+  title: 'O Hotel | Pé da Serra Hotel em Resende, RJ',
+  description: 'Conheça o Pé da Serra Hotel: recém-reformado, no centro de Resende, perto da AMAN, Penedo e Itatiaia. Wi-Fi, café da manhã, ar-condicionado e recepção 24h.',
+  path: '/hotel',
 });
 
 import { lazyImg } from '@/features/image';

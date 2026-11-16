@@ -10,7 +10,7 @@
     <div class="hero-inside d-flex fill-height justify-center align-center">
       <v-card class="mx-10 mb-15" color="rgb(255, 255, 255, 0.4)" flat>
         <v-card-text class="d-flex flex-column align-center justify-center text-center">
-          <p class="text-h6 font-weight-medium text-secondary pb-5">O melhor custo benefício da região!</p>
+          <h1 class="text-h6 font-weight-medium text-secondary pb-5">Localizado no centro de Resende. O melhor custo benefício da região!</h1>
           <v-btn color="white" :href="bookingUrl()" target="blank">
             <v-icon start icon="mdi-whatsapp" />
             Reservar por WhatsApp
@@ -88,16 +88,13 @@
 
 <script lang="ts" setup>
 // Head
-import { useHead } from '@unhead/vue'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Página inicial do Pé da Serra Hotel',
-    },
-  ],
+import { usePageSeo, useHotelStructuredData } from '@/features/seo';
+usePageSeo({
+  title: 'Pé da Serra Hotel | Hotel no centro de Resende, RJ',
+  description: 'Hotel no centro de Resende (RJ), a menos de 500 m da AMAN. Quartos com ar-condicionado, Wi-Fi e café da manhã. O melhor custo-benefício da região.',
+  path: '/',
 });
+useHotelStructuredData();
 
 // Carousel
 import { useDisplay } from 'vuetify'

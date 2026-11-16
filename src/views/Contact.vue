@@ -9,7 +9,7 @@
     <v-col cols="12" lg="4" offset-lg="2" class="pr-0 py-10">
       <div class="h-100 d-flex flex-column justify-space-evenly px-7">
         <div class="text-center">
-          <p class="text-h4">Contato</p>
+          <h1 class="text-h4">Contato</h1>
           <v-divider length="100" class="mx-auto mt-4"/>
         </div>
         <div class="d-flex">
@@ -66,15 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@unhead/vue'
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Informações de contato e localização do hotel.',
-    },
-  ],
+import { usePageSeo } from '@/features/seo';
+usePageSeo({
+  title: 'Contato e localização | Pé da Serra Hotel em Resende, RJ',
+  description: 'Fale com o Pé da Serra Hotel por telefone ou WhatsApp: (24) 3384-7550. Rua Luís Pistarini, 43, Campos Elíseos, Resende - RJ.',
+  path: '/contato',
 });
 
 import { phone, whatsapp, email, address, url } from '@/features/contact';

@@ -116,16 +116,11 @@ import { DateTime } from 'luxon';
 import { ref, toRef, watchEffect, computed } from 'vue';
 import { useDisplay } from 'vuetify';
 import BookingSummaryBar from '@/components/booking/BookingSummaryBar.vue';
-import { useHead } from '@unhead/vue';
-
-useHead({
-  title: 'Pé da Serra Hotel',
-  meta: [
-    {
-      name: 'description',
-      content: 'Fazer reserva online no Pé da Serra Hotel.',
-    },
-  ],
+import { usePageSeo } from '@/features/seo';
+usePageSeo({
+  title: 'Reserva online | Pé da Serra Hotel em Resende, RJ',
+  description: 'Consulte disponibilidade e preços e faça sua reserva online no Pé da Serra Hotel, em Resende (RJ). Rápido, fácil e seguro.',
+  path: '/reserva',
 });
 
 export type BookProps = {
