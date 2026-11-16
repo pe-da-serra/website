@@ -34,9 +34,37 @@ const spaShell = (): Plugin => ({
   enforce: 'post',
   generateBundle(_, bundle) {
     const index = bundle['index.html'];
-    if (index?.type === 'asset') {
-      this.emitFile({ type: 'asset', fileName: 'app.html', source: index.source });
-    }
+    if (index?.type !== 'asset') return;
+
+    // Crawlers (WhatsApp, Facebook, Google) don't run JavaScript, so booking
+    // links need their share tags in the static HTML.
+    const image = Object.values(bundle).find(file => file.type === 'asset' && file.name === 'hotel-1.jpg');
+    const title = 'Reserva online | Pé da Serra Hotel em Resende, RJ';
+    const description = 'Consulte disponibilidade e preços e faça sua reserva online no Pé da Serra Hotel, em Resende (RJ). Rápido, fácil e seguro.';
+    const shareTags = [
+      `<meta property="og:type" content="website" />`,
+      `<meta property="og:site_name" content="Pé da Serra Hotel" />`,
+      `<meta property="og:locale" content="pt_BR" />`,
+      `<meta property="og:title" content="${title}" />`,
+      `<meta property="og:description" content="${description}" />`,
+      `<meta property="og:url" content="${siteUrl}/reserva" />`,
+      ...(image ? [
+        `<meta property="og:image" content="${siteUrl}/${image.fileName}" />`,
+        `<meta property="og:image:secure_url" content="${siteUrl}/${image.fileName}" />`,
+        `<meta property="og:image:type" content="image/jpeg" />`,
+        `<meta property="og:image:width" content="1154" />`,
+        `<meta property="og:image:height" content="768" />`,
+        `<meta property="og:image:alt" content="${title}" />`,
+      ] : []),
+      `<meta name="twitter:card" content="summary_large_image" />`,
+    ].join('\n    ');
+
+    const source = String(index.source)
+      .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
+      .replace(/(<meta name="description" content=")[^"]*/, `$1${description}`)
+      .replace('</head>', `    ${shareTags}\n</head>`);
+
+    this.emitFile({ type: 'asset', fileName: 'app.html', source });
   },
 });
 

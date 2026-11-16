@@ -1,6 +1,6 @@
 import { useHead } from '@unhead/vue';
 import { address, email, phone } from './contact';
-import defaultImage from '@/assets/hotel-1-lg.jpg';
+import defaultImage from '@/assets/hotel-1.jpg';
 
 export const siteUrl = 'https://pedaserrahotel.com.br';
 export const siteName = 'Pé da Serra Hotel';
@@ -13,9 +13,14 @@ type PageSeo = {
   // Canonical path of the page, e.g. '/quartos/casal'
   path: string,
   image?: string,
+  imageAlt?: string,
 };
 
-export function usePageSeo({ title, description, path, image = defaultImage }: PageSeo) {
+// All share images (hotel-1 and room *-1 photos) are 1154x768 and well under
+// WhatsApp's ~300 KB preview limit. Keep it that way when changing them.
+const shareImage = { width: '1154', height: '768', type: 'image/jpeg' };
+
+export function usePageSeo({ title, description, path, image = defaultImage, imageAlt = title }: PageSeo) {
   const url = absoluteUrl(path);
   const imageUrl = absoluteUrl(image);
 
@@ -31,6 +36,11 @@ export function usePageSeo({ title, description, path, image = defaultImage }: P
       { property: 'og:description', content: description },
       { property: 'og:url', content: url },
       { property: 'og:image', content: imageUrl },
+      { property: 'og:image:secure_url', content: imageUrl },
+      { property: 'og:image:type', content: shareImage.type },
+      { property: 'og:image:width', content: shareImage.width },
+      { property: 'og:image:height', content: shareImage.height },
+      { property: 'og:image:alt', content: imageAlt },
       { name: 'twitter:card', content: 'summary_large_image' },
     ],
   });
