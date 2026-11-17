@@ -143,7 +143,12 @@ const isLoading = computed(() => isLoadingBooking.value || isLoadingRooms.value)
 watch(() => booking.value?.status, (status) => {
   if (status === 'Booked' && booking.value) {
     trackBookingConversion(booking.value);
-    trackPurchase(booking.value);
+  }
+}, { immediate: true });
+
+watch(() => [booking.value?.status, rooms.value] as const, ([status, loadedRooms]) => {
+  if (status === 'Booked' && booking.value && loadedRooms) {
+    trackPurchase(booking.value, roomName);
   }
 }, { immediate: true });
 

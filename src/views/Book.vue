@@ -114,7 +114,7 @@ import { useBooking, useSearch, useRooms } from '@/features/booking';
 import { Room, RoomAvailability, BookingPage } from '@/features/booking.types';
 import { DateTime } from 'luxon';
 import { ref, toRef, watchEffect, computed, watch } from 'vue';
-import { trackViewRooms } from '@/features/funnel';
+import { guestsVariant, toStay, trackViewRooms } from '@/features/funnel';
 import { useDisplay } from 'vuetify';
 import BookingSummaryBar from '@/components/booking/BookingSummaryBar.vue';
 import { usePageSeo } from '@/features/seo';
@@ -176,8 +176,9 @@ watch(() => isLoading.value ? undefined : results.value, (list) => {
     item_id: ra.roomTypeId,
     item_name: rooms.value?.find(room => room.id === ra.roomTypeId)?.name,
     price: ra.ratePlans[0]?.pricePerOccupancy[roomFromRate(ra).capacity],
+    item_variant: guestsVariant(roomFromRate(ra).capacity),
     index,
-  })));
+  })), toStay(props.checkIn.toJSDate(), props.checkOut.toJSDate()));
 }, { immediate: true });
 </script>
 
