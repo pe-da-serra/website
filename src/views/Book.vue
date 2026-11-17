@@ -113,7 +113,8 @@ import BookingRoomCard from '@/components/booking/BookingRoomCard.vue';
 import { useBooking, useSearch, useRooms } from '@/features/booking';
 import { Room, RoomAvailability, BookingPage } from '@/features/booking.types';
 import { DateTime } from 'luxon';
-import { ref, toRef, watchEffect, computed } from 'vue';
+import { ref, toRef, watchEffect, computed, watch } from 'vue';
+import { trackViewRooms } from '@/features/funnel';
 import { useDisplay } from 'vuetify';
 import BookingSummaryBar from '@/components/booking/BookingSummaryBar.vue';
 import { usePageSeo } from '@/features/seo';
@@ -167,6 +168,17 @@ function roomFromRate(roomRates: RoomAvailability): Room {
 
   return room;
 }
+
+watch(() => isLoading.value ? undefined : results.value, (list) => {
+  if (!list || !rooms.value) return;
+
+  trackViewRooms(list.filter(ra => !soldOut(ra)).map((ra, index) => ({
+    item_id: ra.roomTypeId,
+    item_name: rooms.value?.find(room => room.id === ra.roomTypeId)?.name,
+    price: ra.ratePlans[0]?.pricePerOccupancy[roomFromRate(ra).capacity],
+    index,
+  })));
+}, { immediate: true });
 </script>
 
 <style scoped>

@@ -123,6 +123,7 @@ import { url } from '@/features/contact';
 import { fromIsoDate, toLongString } from '@/features/date';
 import { toMoney } from '@/features/money';
 import { trackBookingConversion } from '@/features/googleAds';
+import { trackPurchase } from '@/features/funnel';
 import { computed, watch } from 'vue';
 
 useNoIndex();
@@ -142,6 +143,7 @@ const isLoading = computed(() => isLoadingBooking.value || isLoadingRooms.value)
 watch(() => booking.value?.status, (status) => {
   if (status === 'Booked' && booking.value) {
     trackBookingConversion(booking.value);
+    trackPurchase(booking.value);
   }
 }, { immediate: true });
 

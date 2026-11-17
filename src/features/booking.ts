@@ -8,6 +8,7 @@ import { useDateFormat, useStorageAsync } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/router";
 import { useAnalytics } from "./analytics";
+import { FunnelItem, trackAddRoom, trackBeginCheckout, trackGuestInfo, trackPaymentInfo, trackRemoveRoom } from "./funnel";
 
 const hotelId = import.meta.env.VITE_HOTEL_ID;
 
@@ -54,6 +55,15 @@ export function useBooking() {
     summaryList.value.reduce((acc, listItem) => acc + listItem.amount, 0)
   );
 
+  const roomName = (roomId: string) => rooms.value?.find(r => r.id === roomId)?.name;
+
+  const funnelItems = (): FunnelItem[] => selectedRooms.value.map(room => ({
+    item_id: room.roomId,
+    item_name: roomName(room.roomId),
+    price: room.pricePerRoom,
+    quantity: room.totalRooms,
+  }));
+
   const totalGuests = computed(() =>
     summaryList.value.reduce((acc, listItem) => acc + (listItem.guestsPerRoom * listItem.quantity), 0)
   );
@@ -65,6 +75,12 @@ export function useBooking() {
       totalRooms: room.totalRooms,
       checkin: checkinDate.toISOString(),
       checkout: checkoutDate.toISOString(),
+    });
+    trackAddRoom({
+      item_id: room.roomId,
+      item_name: roomName(room.roomId),
+      price: room.pricePerRoom,
+      quantity: room.totalRooms,
     });
     checkin.value = checkinDate;
     checkout.value = checkoutDate;
@@ -88,6 +104,13 @@ export function useBooking() {
     // remove room from selectedRooms
     const index = selectedRooms.value.findIndex(r => r.roomId === roomId && r.guestsPerRoom === guestsPerRoom);
     if (index >= 0) {
+      const removed = selectedRooms.value[index];
+      trackRemoveRoom({
+        item_id: removed.roomId,
+        item_name: roomName(removed.roomId),
+        price: removed.pricePerRoom,
+        quantity: removed.totalRooms,
+      });
       selectedRooms.value.splice(index, 1);
     }
 
@@ -101,11 +124,13 @@ export function useBooking() {
   async function nextStep() {
     if (page.value === BookingPage.Search) {
       analytics.capture("next step: go to guest form");
+      trackBeginCheckout(funnelItems());
       page.value = BookingPage.GuestForm;
     } else if (page.value === BookingPage.GuestForm) {
-      analytics.capture("next step: go to payment form");
       const result = await guestForm.value?.validate();
       if (result?.valid) {
+        analytics.capture("next step: go to payment form");
+        trackGuestInfo(funnelItems());
         payer.value = { ...mainGuest.value };
         page.value = BookingPage.PaymentForm;
       }
@@ -113,6 +138,7 @@ export function useBooking() {
       const result = await paymentForm.value?.validate();
       if (result?.valid) {
         analytics.capture("next step: prebook")
+        trackPaymentInfo(funnelItems(), paymentMethod.value);
         await preBookAction.mutateAsync();
         // page.value = BookingPage.PixForm;
       }
